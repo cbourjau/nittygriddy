@@ -1,7 +1,7 @@
 import os
 
 from nittygriddy import settings
-from utils import get_dataset
+from utils import get_datasets
 
 
 def download(dataset, volume):
@@ -14,7 +14,7 @@ def download(dataset, volume):
     volume : int, float
         Download files until the total volume is this number in GB
     """
-    ds = get_dataset(dataset)
+    ds = get_datasets()[dataset]
     # check if the root datadir exists
     local_data_dir = os.path.expanduser(settings.settings["local_data_dir"])
     period_dir = os.path.join(local_data_dir, ds["datadir"].lstrip('/'))
