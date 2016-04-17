@@ -1,0 +1,66 @@
+import sys
+import json
+import os
+from pprint import pprint
+from datetime import datetime
+
+from rootpy.extern import argparse
+
+from nittygriddy import utils
+
+
+class formatter_class(argparse.ArgumentDefaultsHelpFormatter,
+                      argparse.RawTextHelpFormatter):
+    pass
+
+parser = argparse.ArgumentParser(formatter_class=formatter_class)
+parser.add_argument(
+    '-v', '--verbose', action='store_true', default=False)
+subparsers = parser.add_subparsers()
+
+
+def datasets(args):
+    if args.list:
+        pprint(utils.get_datasets())
+
+
+parser_datasets = subparsers.add_parser('datasets')
+parser_datasets.add_argument(
+    '-ls', '--list',
+    help="list all predifined datasets", default=False, action='store_true')
+parser_datasets.set_defaults(op=datasets)
+
+
+def run(args):
+    if not os.path.isfile(os.path.join(os.path.abspath(os.path.curdir), "nittygriddy.json"))\
+       or not os.path.isfile(os.path.join(os.path.abspath(os.path.curdir), "configureWagon.C")):
+        print "Can only run from a nittygriddy project folder"
+        return
+    try:
+        output_dir = datetime.now().strftime("%Y%m%d_%H%M")
+        os.mkdir(output_dir)
+    except OSError:
+        print "Cannot create output folder {}".format(output_dir)
+        return
+    
+
+parser_run = subparsers.add_parser('run', description="Start analysis on target platform. Must be executed from a nittygriddy project folder (ie. next to a nittygriddy.json file)")
+parser_run.add_argument(
+    '-l', '--local',
+    help="Start in local (sequential) mode", default=False, action='store_true')
+parser_run.add_argument(
+    '-p', '--proof',
+    help="Start in proof lite (local parallel) mode", default=False, action='store_true')
+parser_run.add_argument(
+    '-g', '--grid',
+    help="Submit analysis to the grid", default=False, action='store_true')
+parser_run.set_defaults(op=run)
+
+
+args = parser.parse_args()
+try:
+    args.op(args)
+except KeyboardInterrupt:
+    sys.exit(1)
+except Exception as e:
+    sys.exit("{0}: {1}".format(e.__class__.__name__, e))

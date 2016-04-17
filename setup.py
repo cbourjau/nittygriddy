@@ -1,4 +1,5 @@
 from setuptools import setup
+from glob import glob
 
 install_requires = []
 tests_require = ['nose']
@@ -13,6 +14,7 @@ setup(
     long_description=open('README.rst').read(),
     url='https://github.com/cbourjau/nittygriddy',
     keywords=['alice', 'cern', 'grid', 'proof'],
+    scripts=glob('scripts/*'),
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
