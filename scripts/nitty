@@ -23,7 +23,7 @@ subparsers = parser.add_subparsers()
 def datasets(args):
     if args.list:
         pprint(utils.get_datasets())
-    elif args.search:
+    elif args.show:
         pprint(utils.get_datasets().get(args.search, "Dataset not found."))
     elif args.download:
         if not args.volume:
@@ -36,8 +36,8 @@ parser_datasets.add_argument(
     '-l', '--list',
     help="list all predifined datasets", default=False, action='store_true')
 parser_datasets.add_argument(
-    '-s', '--search',
-    help="search for dataset", type=str)
+    '-s', '--show',
+    help="show only given dataset", type=str)
 parser_datasets.add_argument(
     '-d', '--download',
     help="Download subset of specified dataset (see --volume)", type=str)
