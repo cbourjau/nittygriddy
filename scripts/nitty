@@ -95,5 +95,3 @@ try:
     args.op(args)
 except KeyboardInterrupt:
     sys.exit(1)
-except Exception as e:
-    sys.exit("{0}: {1}".format(e.__class__.__name__, e))
