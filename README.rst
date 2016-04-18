@@ -2,8 +2,20 @@
 Nitty Griddy
 ============
 
-Nitty griddy aims to make the deployment of analysis using the Aliroot framework easier and transparent. The goal is to eliminate the ungodly practice of copy-pasting together `run.C` files. A nitty griddy project requires only minimum information, is reproducible and runs seamlessly in `local`, `proof lite` or `grid` mode. It makes it easy to select the datasets as well and suports downloading partial datasets for local offline development. Furthermore, nitty griddy allows for monitoring and interaction with the current status of your grid jobs (eg. executing merges).
+Nitty griddy aims to make the deployment of analysis using the Aliroot framework easier and transparent. The goal is to eliminate the ungodly practice of copy-pasting together `run.C` files from all over the place. A nittygriddy project requires only minimum information, is reproducible and runs seamlessly in `local`, `proof lite` or `grid` mode. It makes it easy to select the datasets as well and suports downloading partial datasets for local offline development. Furthermore, nittygriddy allows for triggering merges once a grid analysis is done. All that being said, nittygriddy still produces straight forward `run.C` files, so you could always go back to those, if you chose to.
 
+Installing nittygriddy
+======================
+
+In the future nittygriddy might be available on `pypi`, but for the moment you have to do the following steps: ::
+
+  $ git clone https://gitlab.cern.ch/cbourjau/nittygriddy.git
+  $ cd nittygriddy
+  $ pip install -e .
+
+This installs nittygriddy in `editable` mode, meaning that any changes to the files in the repository clone are imediately avaialable to the command line tool without the need for reinstalization. This means that updates can be raked in with a simple `git pull origin/master`.
+
+Eitherway, the command `nitty` is now avialable on the command line, along with its hopefully helpful `--help`.
 
 Setting up a project
 ====================
