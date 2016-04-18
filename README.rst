@@ -4,6 +4,10 @@ Nitty Griddy
 
 Nitty griddy aims to make the deployment of analysis using the Aliroot framework easier and transparent. The goal is to eliminate the ungodly practice of copy-pasting together `run.C` files from all over the place. A nittygriddy project requires only minimum information, is reproducible and runs seamlessly in `local`, `proof lite` or `grid` mode. It makes it easy to select the datasets as well and suports downloading partial datasets for local offline development. Furthermore, nittygriddy allows for triggering merges once a grid analysis is done. All that being said, nittygriddy still produces straight forward `run.C` files, so you could always go back to those, if you chose to.
 
+
+.. image:: https://imgs.xkcd.com/comics/standards.png
+
+
 Installing nittygriddy
 ======================
 
