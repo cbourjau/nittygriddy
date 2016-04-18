@@ -61,9 +61,12 @@ def run(args):
         return
     try:
         os.symlink(output_dir, "latest")
-    except OSError:
-        os.remove("latest")
-        os.symlink(output_dir, "latest")
+    except OSError as e:
+        if os.path.islink("latest"):
+            os.remove("latest")
+            os.symlink(output_dir, "latest")
+        else:
+            raise e
     utils.copy_template_files_to(output_dir)
     shutil.copy(os.path.join(os.path.dirname(output_dir), "ConfigureWagon.C"), output_dir)
     # generate input file
