@@ -1,7 +1,7 @@
 import os
 
 from unittest import TestCase
-from nittygriddy import download, settings
+from nittygriddy import utils, settings
 
 
 class Test_downloader(TestCase):
@@ -14,7 +14,7 @@ class Test_downloader(TestCase):
             pass
 
     def test_invalid_dataset(self):
-        self.assertRaises(KeyError, download, "invalid_dataset", 5)
+        self.assertRaises(KeyError, utils.download, "invalid_dataset", 5)
 
     def test_downloaded_something(self):
-        download("LHC10h_AOD160", 0.001)
+        utils.download("LHC10h_AOD160", 0.001)
