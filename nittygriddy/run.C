@@ -1,3 +1,10 @@
+/* 
+ * This is an automatically generated file. Do yourself a favour and
+ * do __not__ edit it by hand. It will be overwritten eventually and
+ * you will be sad. Instead file an issue over at the nittygriddy
+ * gitlab page, please.
+ */
+
 #ifndef __CINT__
 #include <fstream>
 #include <iostream>
@@ -136,6 +143,7 @@ void run()
   }
 
   gROOT->LoadMacro("./ConfigureWagon.C");
+  ConfigureWagon();
 
   if (!mgr->InitAnalysis()) return;
   mgr->PrintStatus();
