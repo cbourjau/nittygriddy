@@ -61,29 +61,40 @@ def download(dataset, volume):
         os.makedirs(period_dir)
     except OSError:
         pass
-    for run in ds["run_list"].split(" "):
+    for run in ds["run_list"].split(","):
+        run = run.strip()  # get rid of spaces around the number
         search_string = os.path.join(ds["datadir"],
                                      ds["run_number_prefix"] + str(run),
                                      ds["data_pattern"])
         find_cmd = ['alien_find',
-                    os.path.split(search_string)[0],
-                    os.path.split(search_string)[1]]
+                    os.path.dirname(search_string),
+                    os.path.basename(search_string)]
         run_files = subprocess.check_output(find_cmd).split()
+        run_files.sort()
         # this should be sorted in order to download sequentially
-        for path2file in run_files:
+        for alien_path2file in run_files:
             # alien_find puts some jibberish; stop at first line without path
-            if not path2file.startswith("/"):
+            if not alien_path2file.startswith("/"):
                 break
             # paths to file
-            local_path = os.path.join(local_data_dir, path2file.lstrip('/'))
-            alien_path = "alien:/" + path2file
-            try:
-                os.makedirs(os.path.dirname(local_path))
-            except OSError:
-                pass
-            cp_cmd = ['alien_cp', '-m', '-s', alien_path, local_path]
-            subprocess.check_output(cp_cmd)
-
+            local_path = os.path.join(local_data_dir, alien_path2file.lstrip('/'))
+            alien_path = "alien:/" + alien_path2file
+            if not os.path.isfile(local_path):
+                try:
+                    os.makedirs(os.path.dirname(local_path))
+                except OSError:
+                    pass
+                cp_cmd = ['alien_cp', '-m', '-s', alien_path, local_path]
+                try:
+                    subprocess.check_output(cp_cmd)
+                except subprocess.CalledProcessError:
+                    print "An error occued while downloading {}; The broken file was deleted."
+                    try:
+                        os.remove(local_path)
+                    except OSError:
+                        pass
+            else:
+                print "{} already present; skipped download.".format(local_path)
             cum_size = get_size(os.path.join(period_dir, "*", ds["data_pattern"]))
             print "Downloaded {}GB of {} so far".format(cum_size / 1e9, volume)
             if (cum_size / 1e9) > volume:

@@ -23,12 +23,28 @@ subparsers = parser.add_subparsers()
 def datasets(args):
     if args.list:
         pprint(utils.get_datasets())
+    elif args.search:
+        pprint(utils.get_datasets().get(args.search, "Dataset not found."))
+    elif args.download:
+        if not args.volume:
+            raise ValueError("No download volume specified")
+        utils.download(args.download, args.volume)
 
 
 parser_datasets = subparsers.add_parser('datasets')
 parser_datasets.add_argument(
     '-l', '--list',
     help="list all predifined datasets", default=False, action='store_true')
+parser_datasets.add_argument(
+    '-s', '--search',
+    help="search for dataset", type=str)
+parser_datasets.add_argument(
+    '-d', '--download',
+    help="Download subset of specified dataset (see --volume)", type=str)
+parser_datasets.add_argument(
+    '--volume',
+    help="Use with --download; Download this many GB", type=float)
+
 parser_datasets.set_defaults(op=datasets)
 
 
