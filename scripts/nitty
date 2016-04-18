@@ -63,7 +63,7 @@ def run(args):
     # create GetSetting.C in output dir (from template)
     with open(os.path.join(output_dir, "GetSetting.C"), "w") as get_setting_c:
         as_string = utils.get_template_GetSetting().\
-            format(period="",
+            format(overwrite_oadb_period=ds.get("overwrite_oadb_period", ""),
                    workdir=os.path.split(output_dir)[1],
                    datadir=ds['datadir'],
                    data_pattern=ds['data_pattern'],

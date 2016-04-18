@@ -9,6 +9,7 @@
 	"run_list": "139510, 139507, 139505, 139503, 139465, 139438"
     },
     "LHC15f4_AOD": {
+	"overwrite_oadb_period": "LHC15f",
 	"datatype": "aod",
 	"system": "PbPb",
 	"is_mc": "true",
