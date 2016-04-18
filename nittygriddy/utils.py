@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 
 from nittygriddy import settings
 
@@ -91,8 +92,9 @@ def download(dataset, volume):
                                      stderr=subprocess.STDOUT)
                 p.wait()
                 if p.returncode != 0:
-                    print p.stdout.read()
-                    print "An error occued while downloading {}; The broken file was deleted.".format(local_path)
+                    print "\n", p.stdout.read()
+                    print("An error occued while downloading {}; "
+                          "The broken file was deleted.".format(local_path))
                     try:
                         os.remove(local_path)
                     except OSError:
@@ -102,6 +104,8 @@ def download(dataset, volume):
                     warned_about_skipped = True
                     print "Some files were present and were not redownloaded"
             cum_size = get_size(os.path.join(period_dir, "*", ds["data_pattern"]))
-            print "Downloaded {}GB of {} so far".format(cum_size / 1e9, volume)
+            sys.stdout.write("\rDownloaded {:2f}% of {}GB so far"
+                             .format(100 * cum_size / 1e9 / volume, volume))
+            sys.stdout.flush()
             if (cum_size / 1e9) > volume:
                 return
