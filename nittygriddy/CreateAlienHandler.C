@@ -47,20 +47,14 @@ AliAnalysisGrid* CreateAlienHandler(Int_t gridMode, Bool_t isMC) {
   plugin->SetExecutable("myAnalysisExec.sh");
   plugin->SetJDLName("myTask.jdl");
   plugin->SetDropToShell(false);  // do not open a shell
-
-  if(isMC)
-    plugin->SetRunPrefix(""); 
-  else
-    plugin->SetRunPrefix("000"); 
-
-  plugin->AddRunList(getSettings(settingName).kGRIDRUNLIST);
-
-  plugin->SetGridOutputDir("output"); // In this case will be $HOME/work/output 
+  plugin->SetRunPrefix(GetSetting("run_number_prefix")); 
+  plugin->AddRunList(getSetting("run_list"));
+  plugin->SetGridOutputDir("output");
   plugin->SetMaxMergeFiles(25);
   plugin->SetMergeExcludes("EventStat_temp.root"
 			   "event_stat.root");
-
-  plugin->SetOutputToRunNo();     // Use run number as output folder names
+  // Use run number as output folder names
+  plugin->SetOutputToRunNo();
   plugin->SetTTL(15*3600);
   // Optionally set input format (default xml-single)
   plugin->SetInputFormat("xml-single");
