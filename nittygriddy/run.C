@@ -29,6 +29,8 @@
 #endif
 
 enum {kLOCAL, kLITE, kPOD, kGRID};
+enum {kGRID_FULL, kGRID_OFFLINE, kGRID_TEST, kGRID_MERGE_ONLINE, kGRID_MERGE_OFFLINE};
+TString kALICE_PHYSICS = "vAN-20160405-1";
 
 void loadLibs(const TString extralibs, const Int_t runmode){
   if (runmode == kLOCAL || runmode == kGRID){
@@ -91,7 +93,72 @@ void setUpIncludes(Int_t runmode) {
   }
 }
 
-void run()
+AliAnalysisGrid* CreateAlienHandler(const string gridMode) {
+  // Create a generic alien grid handler.
+  AliAnalysisAlien *plugin = new AliAnalysisAlien();
+
+  plugin->AddIncludePath("-I. -I$ROOTSYS/include -I$ALICE_ROOT/include -I$ALICE_PHYSICS/include");
+  plugin->SetAdditionalLibs("libOADB.so libSTEERBase.so");
+  plugin->SetOverwriteMode();
+  plugin->SetExecutableCommand("aliroot -q -b");
+  // The following option is necessary to write the merge jdl's
+  plugin->SetMergeViaJDL(true);
+
+  // Can be "full", "test", "offline", "submit" or "merge"
+  // merging only works in "full" mode?!
+  if (gridMode == "offline"){
+    plugin->SetRunMode(gridMode.c_str());
+  }
+  else if (gridMode == "test"){
+    plugin->SetRunMode(gridMode.c_str());
+  }
+  else if (gridMode == "full"){
+    plugin->SetRunMode(gridMode.c_str());
+  }
+  else if (gridMode == "merge_online"){
+    plugin->SetRunMode("terminate");
+  }
+  else if (gridMode == "merge_offline"){
+    plugin->SetRunMode("terminate");
+    plugin->SetMergeViaJDL(false);
+  }
+  else {
+    std::cout << "Invalid gridMode!" << std::endl;
+    assert(0);
+  }
+  plugin->SetNtestFiles(1);
+  //Set versions of used packages
+  plugin->SetAliPhysicsVersion(kALICE_PHYSICS);
+
+  // Declare input data to be processed
+  plugin->SetGridDataDir(GetSetting("datadir").c_str());
+  plugin->SetDataPattern(GetSetting("data_pattern").c_str());
+  plugin->SetGridWorkingDir(GetSetting("workdir").c_str());
+  plugin->SetAnalysisMacro("myAnalysisMacro.C");
+  plugin->SetExecutable("myAnalysisExec.sh");
+  plugin->SetJDLName("myTask.jdl");
+  plugin->SetDropToShell(false);  // do not open a shell
+  plugin->SetRunPrefix(GetSetting("run_number_prefix").c_str()); 
+  plugin->AddRunList(GetSetting("run_list").c_str());
+  plugin->SetGridOutputDir("output");
+  plugin->SetMaxMergeFiles(25);
+  plugin->SetMergeExcludes("EventStat_temp.root"
+			   "event_stat.root");
+  // Use run number as output folder names
+  plugin->SetOutputToRunNo();
+  plugin->SetTTL(15*3600);
+  // Optionally set input format (default xml-single)
+  plugin->SetInputFormat("xml-single");
+  // Optionally modify job price (default 1)
+  plugin->SetPrice(1);      
+  // Optionally modify split mode (default 'se')    
+  //plugin->SetSplitMaxInputFileNumber();
+  plugin->SetSplitMode("se");
+  return plugin;
+};
+
+
+void run(const std::string gridMode="")
 {
   // load GetSetting.C macro to allow access to settings for this particular dataset
   gROOT->LoadMacro("./GetSetting.C");
@@ -129,7 +196,7 @@ void run()
 
   if (runmode == kGRID) {
     gROOT->LoadMacro("./CreateAlienHandler.C");
-    AliAnalysisGrid *alienHandler = CreateAlienHandler();
+    AliAnalysisGrid *alienHandler = CreateAlienHandler(gridMode);
     if (!alienHandler) return;
     mgr->SetGridHandler(alienHandler);
   }
@@ -168,11 +235,4 @@ void run()
 	else mgr->StartAnalysis("local", chain, max_events);
       }
     }
-  // else if (runmode == kPOD){
-  //   // process with dataset string
-  //   TString dataset = getDatasetString(incollection);
-  //   // Check the dataset before running the analysis!
-  //   gProof->ShowDataSet( dataset.Data() );
-  //   mgr->StartAnalysis("proof", dataset, max_events, 0 /*first_event*/);
-  // }
 }
