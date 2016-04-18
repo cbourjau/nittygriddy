@@ -21,6 +21,6 @@ std::string GetSetting(const std::string settingName) {{
     else if (settingName == "runmode")
       return "{runmode}";
     else 
-      std::cout << "Invalid setting name!" << std::endl;
+      std::cout << "Invalid setting name: " << settingName << std::endl;
   }};
 
