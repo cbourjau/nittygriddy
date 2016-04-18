@@ -24,8 +24,8 @@ The only `.C` file needed. It reflects setting up the options for your task anal
   }
 
 
-nittygriddy.json
-----------------
+nittygriddy.json *(Not used, yet)*
+----------------------------------
 This file contains some default options as well as depedencies which need to be loaded for execution. Again, this is analogus to the lego train interface. An example file might look like: ::
 
   [
@@ -35,8 +35,8 @@ This file contains some default options as well as depedencies which need to be 
   ];
 
 
-datasets.json
--------------
+datasets.json *(Not implemented, yet)*
+--------------------------------------
 This file contains information about custom datasets. If the standard ones are used this is not necessary.
 
 
@@ -49,25 +49,31 @@ List all dataset::
 
 Show details about dataset::
 
-  $ nitty datasets show LHC10h
+  $ nitty datasets --show LHC10h_AOD160
 
 Download 5GB of data from the given dataset for offline developing::
 
-  $ nitty datasets download LHC10h_AOD160 --amount=5
+  $ nitty datasets --download LHC10h_AOD160 --volume=5
 
 Run your analysis in proof lite locally::
 
   $ nitty run lite LHC10H_AOD160
 
-Or do things with it on the grid::
+Or submit it to the grid::
     
-  $ nitty run grid test LHC10H_AOD160
-  $ nitty run grid launch LHC10H_AOD160
-  $ nitty run grid merge online LHC10H_AOD160 --run=139438
-  $ nitty run grid merge offline LHC10H_AOD160
+  $ nitty run grid LHC10H_AOD160
+
+Once your analysis is finished on the grid, change to the output dir (`latest`) and trigger the merging::
+    
+  $ cd latest
+  $ nitty merge online
+
+Once all the final merging stages are reached, you can merge individual runs offline on your own computer::
+    
+  $ nitty merge offline
 
 
 What is happening behind the scene?
 ===================================
 
-When running your analysis nitty griddy create a new folder in your project folder named after the dataset. It then generates a `run.C` file from your options and copies it into that folder. This `run.C` can be run on independently, if you chose to do so, but it is not recommended to edit it, since it might get overwritten easily.
+When running your analysis nitty griddy create a new folder in your project folder. It then generates a `run.C` file from your options and copies it into that folder. This `run.C` can be run on independently and should be easy to read. This has the advantage that you can always just stop using `nittygriddy` and drop back to modifying the macros yourself - no vendor lockin! However, if you would like to continue using `nittygriddy`, you should not edit those macros directly since they might get overwritten and it defeats the purpose of this program in the first place.
