@@ -114,6 +114,27 @@ parser_run.add_argument('--folder-postfix', type=str,
 parser_run.set_defaults(op=run)
 
 
+def merge(args):
+    # check if we are in a output dirname
+    if not (os.path.isfile("./ConfigureWagon.C") and
+            os.path.isfile("./GetSetting.C") and
+            os.path.isfile("./run.C")):
+        raise ValueError("This command needs to be run from an output directory")
+    if args.mergemode == 'online':
+        cmd = ['root', '-l', '-q', '-x', 'run.C(\"merge_online\")']
+    elif args.mergemode == 'offline':
+        cmd = ['root', '-l', '-q', '-x', 'run.C(\"merge_offline\")']
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    for line in iter(p.stdout.readline, b''):
+        print(line.rstrip())  # rstrip to remove \n; doesn't like carriage returns
+
+description_merge = """Merge the output of a previously run grid analysis. Must be
+executed from output folder of that analysis."""
+parser_merge = subparsers.add_parser('merge', description=description_merge)
+parser_merge.add_argument('mergemode', choices=('online', 'offline'))
+parser_merge.set_defaults(op=merge)
+
+
 args = parser.parse_args()
 try:
     args.op(args)
