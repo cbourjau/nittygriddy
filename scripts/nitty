@@ -73,14 +73,6 @@ def run(args):
     shutil.copy(os.path.join(os.path.dirname(output_dir), "ConfigureWagon.C"), output_dir)
     # generate input file
     ds = utils.get_datasets()[args.dataset]
-    # create the input file (TODO: if not grid mode)
-    with open(os.path.join(output_dir, "input_files.dat"), 'a') as input_files:
-        search_string = os.path.expanduser(os.path.join(settings["local_data_dir"],
-                                                        ds["datadir"].lstrip("/"),
-                                                        "*",
-                                                        ds["data_pattern"]))
-        input_files.write('\n'.join(glob(search_string)) + '\n')
-
     # create GetSetting.C in output dir (from template)
     with open(os.path.join(output_dir, "GetSetting.C"), "w") as get_setting_c:
         as_string = utils.get_template_GetSetting().\
@@ -94,9 +86,21 @@ def run(args):
                    datatype=ds["datatype"],
                    runmode=args.runmode)
         get_setting_c.write(as_string)
+
     # start the analysis
     os.chdir(output_dir)
-    cmd = ['root', '-l', '-q', 'run.C']
+    if args.runmode != "grid":
+        # create list of local files
+        with open(os.path.join(output_dir, "input_files.dat"), 'a') as input_files:
+            search_string = os.path.expanduser(os.path.join(settings["local_data_dir"],
+                                                            ds["datadir"].lstrip("/"),
+                                                            "*",
+                                                            ds["data_pattern"]))
+            input_files.write('\n'.join(glob(search_string)) + '\n')
+        # command to start the analysis
+        cmd = ['root', '-l', '-q', 'run.C']
+    else:
+        cmd = ['root', '-l', '-q', '-x', 'run.C(\"full\")']
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     for line in iter(p.stdout.readline, b''):
         print(line.rstrip())  # rstrip to remove \n; doesn't like carriage returns
