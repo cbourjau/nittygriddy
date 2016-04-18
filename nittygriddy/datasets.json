@@ -1,10 +1,10 @@
 {
-    "LHC10h": {
-	"name": "AOD160",
-	"type": "aod",
+    "LHC10h_AOD160": {
+	"datatype": "aod",
+	"is_mc": "false",
 	"datadir": "/alice/data/2010/LHC10h",
 	"data_pattern": "ESDs/pass2/AOD160/*/AliAOD.root",
 	"run_number_prefix": "000",
-	"run_list": [139510, 139507, 139505, 139503, 139465, 139438]
+	"run_list": "139510, 139507, 139505, 139503, 139465, 139438"
     }
 }
