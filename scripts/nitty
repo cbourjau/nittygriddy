@@ -1,10 +1,11 @@
-import sys
-import shutil
-from glob import glob
-import os
-from pprint import pprint
 from datetime import datetime
+from glob import glob
+from pprint import pprint
+import subprocess
 import argparse
+import os
+import shutil
+import sys
 
 from nittygriddy import utils, settings
 
@@ -74,7 +75,10 @@ def run(args):
         get_setting_c.write(as_string)
     # start the analysis
     os.chdir(output_dir)
-    print os.popen("aliroot -l -q run.C").read()
+    cmd = ['root', '-l', '-q', 'run.C']
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    for line in iter(p.stdout.readline, b''):
+        print(">>> " + line.rstrip())
 
 description_run = """Start analysis on target platform. Must be executed from a
 nittygriddy project folder (ie. next to a nittygriddy.json file)"""
