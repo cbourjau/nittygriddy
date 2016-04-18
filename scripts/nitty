@@ -121,12 +121,12 @@ def merge(args):
             os.path.isfile("./run.C")):
         raise ValueError("This command needs to be run from an output directory")
     if args.mergemode == 'online':
-        cmd = ['root', '-l', '-q', '-x', 'run.C(\"merge_online\")']
+        cmd = r'root -l -q -x "run.C(\"merge_online\")"'
     elif args.mergemode == 'offline':
-        cmd = ['root', '-l', '-q', '-x', 'run.C(\"merge_offline\")']
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    for line in iter(p.stdout.readline, b''):
-        print(line.rstrip())  # rstrip to remove \n; doesn't like carriage returns
+        cmd = r'root -l -q -x "run.C(\"merge_offline\")"'
+    # rood does not like it if the stdout is piped and it uses some shell functionality
+    # thus, using call on the whole string and shell True
+    subprocess.check_call(cmd, shell=True)
 
 description_merge = """Merge the output of a previously run grid analysis. Must be
 executed from output folder of that analysis."""
