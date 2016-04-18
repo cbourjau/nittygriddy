@@ -61,6 +61,7 @@ def download(dataset, volume):
         os.makedirs(period_dir)
     except OSError:
         pass
+    warned_about_skipped = False
     for run in ds["run_list"].split(","):
         run = run.strip()  # get rid of spaces around the number
         search_string = os.path.join(ds["datadir"],
@@ -71,7 +72,7 @@ def download(dataset, volume):
                     os.path.basename(search_string)]
         run_files = subprocess.check_output(find_cmd).split()
         run_files.sort()
-        # this should be sorted in order to download sequentially
+
         for alien_path2file in run_files:
             # alien_find puts some jibberish; stop at first line without path
             if not alien_path2file.startswith("/"):
@@ -85,16 +86,21 @@ def download(dataset, volume):
                 except OSError:
                     pass
                 cp_cmd = ['alien_cp', '-m', '-s', alien_path, local_path]
-                try:
-                    subprocess.check_output(cp_cmd)
-                except subprocess.CalledProcessError:
-                    print "An error occued while downloading {}; The broken file was deleted."
+                p = subprocess.Popen(cp_cmd,
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.STDOUT)
+                p.wait()
+                if p.returncode != 0:
+                    print p.stdout.read()
+                    print "An error occued while downloading {}; The broken file was deleted.".format(local_path)
                     try:
                         os.remove(local_path)
                     except OSError:
                         pass
             else:
-                print "{} already present; skipped download.".format(local_path)
+                if not warned_about_skipped:
+                    warned_about_skipped = True
+                    print "Some files were present and were not redownloaded"
             cum_size = get_size(os.path.join(period_dir, "*", ds["data_pattern"]))
             print "Downloaded {}GB of {} so far".format(cum_size / 1e9, volume)
             if (cum_size / 1e9) > volume:
