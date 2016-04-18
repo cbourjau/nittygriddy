@@ -6,6 +6,7 @@
  */
 
 #ifndef __CINT__
+#include <assert.h>
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -93,7 +94,7 @@ void setUpIncludes(Int_t runmode) {
   }
 }
 
-AliAnalysisGrid* CreateAlienHandler(const string gridMode) {
+AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   // Create a generic alien grid handler.
   AliAnalysisAlien *plugin = new AliAnalysisAlien();
 
