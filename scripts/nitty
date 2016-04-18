@@ -26,7 +26,7 @@ def datasets(args):
 
 parser_datasets = subparsers.add_parser('datasets')
 parser_datasets.add_argument(
-    '-ls', '--list',
+    '-l', '--list',
     help="list all predifined datasets", default=False, action='store_true')
 parser_datasets.set_defaults(op=datasets)
 

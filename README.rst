@@ -45,7 +45,7 @@ Using Nittygriddy
 
 List all dataset::
 
-  $ nitty datasets ls
+  $ nitty datasets -l
 
 Show details about dataset::
 
