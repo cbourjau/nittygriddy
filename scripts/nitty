@@ -13,6 +13,9 @@ import ROOT
 from nittygriddy import utils, settings
 
 
+# collect processes to be able to kill them
+procs = []
+
 class formatter_class(argparse.ArgumentDefaultsHelpFormatter,
                       argparse.RawTextHelpFormatter):
     pass
@@ -109,6 +112,7 @@ def run(args):
     else:
         cmd = ['root', '-l', '-q', '-x', 'run.C(\"full\")']
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    procs.append(p)
     for line in iter(p.stdout.readline, b''):
         print(line.rstrip())  # rstrip to remove \n; doesn't like carriage returns
 
@@ -150,6 +154,9 @@ args = parser.parse_args()
 try:
     args.op(args)
 except KeyboardInterrupt:
+    for proc in procs:
+        print "Killing: ", proc
+        proc.terminate()
     sys.exit(1)
 except Exception as e:
     if args.verbose:
