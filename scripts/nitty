@@ -27,10 +27,15 @@ def datasets(args):
     if args.list:
         pprint(utils.get_datasets())
     elif args.show:
-        pprint(utils.get_datasets().get(args.search, "Dataset not found."))
+        ds = utils.get_datasets().get(args.search, None)
+        if not ds:
+            raise ValueError("Dataset not found.")
+        pprint(ds)
     elif args.download:
         if not args.volume:
             raise ValueError("No download volume specified")
+        elif not utils.get_datasets().get(args.download, False):
+            raise ValueError("Dataset not found.")
         utils.download(args.download, args.volume)
 
 
