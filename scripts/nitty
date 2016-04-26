@@ -27,7 +27,7 @@ def datasets(args):
     if args.list:
         pprint(utils.get_datasets())
     elif args.show:
-        ds = utils.get_datasets().get(args.search, None)
+        ds = utils.get_datasets().get(args.show, None)
         if not ds:
             raise ValueError("Dataset not found.")
         pprint(ds)
