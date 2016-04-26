@@ -9,7 +9,9 @@ class Test_downloader(TestCase):
         test_local_dir = "~/lhc_data_test/"
         settings["local_data_dir"] = test_local_dir
         try:
-            os.rmdir(test_local_dir)
+            # make sure that we really only delete a __test__ dir
+            if 'test' in test_local_dir:
+                os.rmdir(test_local_dir)
         except OSError:
             pass
 
