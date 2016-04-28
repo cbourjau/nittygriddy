@@ -185,8 +185,10 @@ void run(const std::string gridMode="")
   TString proofUrl = "";
   if (runmode == kLITE) {
     proofUrl += "lite://";
-    if (GetSetting("nworkers") != "-1")
-      proofUrl += "?workers=2";
+    if (GetSetting("nworkers") != "-1"){
+      proofUrl += "?workers=";
+      proofUrl += GetSetting("nworkers");
+    }
   } else if (runmode == kPOD) {
     proofUrl += "pod://";
   }
