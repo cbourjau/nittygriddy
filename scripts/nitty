@@ -86,7 +86,8 @@ def run(args):
                    run_list=ds['run_list'],
                    is_mc=ds["is_mc"],
                    datatype=ds["datatype"],
-                   runmode=args.runmode)
+                   runmode=args.runmode,
+                   nworkers=args.nworkers)
         get_setting_c.write(as_string)
 
     # start the analysis
@@ -114,6 +115,8 @@ parser_run.add_argument('runmode', choices=('local', 'lite', 'grid'))
 parser_run.add_argument('dataset', type=str, help="Use this dataset")
 parser_run.add_argument('--folder-postfix', type=str,
                         help="Attach to the end of the folder name")
+parser_run.add_argument('--nworkers', type=str, help="Number of workers for proof lite",
+                        default="-1")
 parser_run.set_defaults(op=run)
 
 

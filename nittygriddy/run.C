@@ -177,8 +177,15 @@ void run(const std::string gridMode="")
     assert(0);
   }
   // start proof if necessary
-  if (runmode == kLITE) TProof::Open("lite://");
-  else if (runmode == kPOD) TProof::Open("pod://");
+  TString proofUrl = "";
+  if (runmode == kLITE) {
+    proofUrl += "lite://";
+    if (GetSetting("nworkers") != "-1")
+      proofUrl += "?workers=2";
+  } else if (runmode == kPOD) {
+    proofUrl += "pod://";
+  }
+  TProof::Open(proofUrl);
 
   setUpIncludes(runmode);
 

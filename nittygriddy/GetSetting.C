@@ -1,3 +1,7 @@
+// This file is automatically created. Do not edit it!  If you see
+// this in the nittygriddy source code, the double curly brackets are
+// for escaping!
+
 #include <string>
 #include <iostream>
 
@@ -20,7 +24,10 @@ std::string GetSetting(const std::string settingName) {{
       return "{datatype}";
     else if (settingName == "runmode")
       return "{runmode}";
+    else if (settingName == "nworkers")
+      return "{nworkers}";
     else 
       std::cout << "Invalid setting name: " << settingName << std::endl;
+    return "";
   }};
 
