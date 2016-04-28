@@ -165,7 +165,12 @@ void run(const std::string gridMode="")
   gROOT->LoadMacro("./GetSetting.C");
   Int_t max_events = -1;
   Int_t runmode = -1;
-
+  if (GetSetting("wait_for_gdb") == "true"){
+    cout << "Execution is paused so that you cann attach gdb to the running process:" << endl;
+    cout << "gdb -p " << gSystem->GetPid() << endl;
+    cout << "Press any key to continue" << endl;
+    std::cin.ignore();
+  }
   if (GetSetting("runmode") == "local")
     runmode = kLOCAL;
   else if (GetSetting("runmode") == "lite")

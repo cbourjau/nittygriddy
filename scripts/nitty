@@ -13,6 +13,9 @@ import ROOT
 from nittygriddy import utils, settings
 
 
+# collect processes to be able to kill them
+procs = []
+
 class formatter_class(argparse.ArgumentDefaultsHelpFormatter,
                       argparse.RawTextHelpFormatter):
     pass
@@ -27,10 +30,15 @@ def datasets(args):
     if args.list:
         pprint(utils.get_datasets())
     elif args.show:
-        pprint(utils.get_datasets().get(args.search, "Dataset not found."))
+        ds = utils.get_datasets().get(args.show, None)
+        if not ds:
+            raise ValueError("Dataset not found.")
+        pprint(ds)
     elif args.download:
         if not args.volume:
             raise ValueError("No download volume specified")
+        elif not utils.get_datasets().get(args.download, False):
+            raise ValueError("Dataset not found.")
         utils.download(args.download, args.volume)
 
 
@@ -87,7 +95,8 @@ def run(args):
                    is_mc=ds["is_mc"],
                    datatype=ds["datatype"],
                    runmode=args.runmode,
-                   nworkers=args.nworkers)
+                   nworkers=args.nworkers,
+                   wait_for_gdb="true" if args.wait_for_gdb else "false")
         get_setting_c.write(as_string)
 
     # start the analysis
@@ -105,6 +114,7 @@ def run(args):
     else:
         cmd = ['root', '-l', '-q', '-x', 'run.C(\"full\")']
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    procs.append(p)
     for line in iter(p.stdout.readline, b''):
         print(line.rstrip())  # rstrip to remove \n; doesn't like carriage returns
 
@@ -117,6 +127,8 @@ parser_run.add_argument('--folder-postfix', type=str,
                         help="Attach to the end of the folder name")
 parser_run.add_argument('--nworkers', type=str, help="Number of workers for proof lite",
                         default="-1")
+parser_run.add_argument('--wait_for_gdb', action='store_true', default=False,
+                        help="Pause the execution to allow for connecting gdb to the process")
 parser_run.set_defaults(op=run)
 
 
@@ -148,6 +160,9 @@ args = parser.parse_args()
 try:
     args.op(args)
 except KeyboardInterrupt:
+    for proc in procs:
+        print "Killing: ", proc
+        proc.terminate()
     sys.exit(1)
 except Exception as e:
     if args.verbose:

@@ -26,6 +26,8 @@ std::string GetSetting(const std::string settingName) {{
       return "{runmode}";
     else if (settingName == "nworkers")
       return "{nworkers}";
+    else if (settingName == "wait_for_gdb")
+      return "{wait_for_gdb}";
     else 
       std::cout << "Invalid setting name: " << settingName << std::endl;
     return "";
