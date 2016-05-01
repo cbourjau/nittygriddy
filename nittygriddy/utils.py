@@ -109,3 +109,16 @@ def download(dataset, volume):
             sys.stdout.flush()
             if (cum_size / 1e9) > volume:
                 return
+
+
+def get_latest_aliphysics():
+    """
+    Return the latest aliphysics version string as expected by the grid plugin.
+    """
+    from datetime import datetime, timedelta
+    from pytz import timezone
+    tz = timezone('Europe/Zurich')
+    tagtime = datetime.now(tz=tz)
+    if tagtime.hour < 18:
+        tagtime -= timedelta(days=1)
+    return "vAN-{}-1".format(tagtime.strftime("%Y%m%d"))

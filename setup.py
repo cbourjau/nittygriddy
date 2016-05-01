@@ -1,7 +1,7 @@
 from setuptools import setup
 from glob import glob
 
-install_requires = []
+install_requires = ['pytz']
 tests_require = ['nose']
 
 setup(

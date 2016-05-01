@@ -96,7 +96,8 @@ def run(args):
                    datatype=ds["datatype"],
                    runmode=args.runmode,
                    nworkers=args.nworkers,
-                   wait_for_gdb="true" if args.wait_for_gdb else "false")
+                   wait_for_gdb="true" if args.wait_for_gdb else "false",
+                   aliphysics_version=utils.get_latest_aliphysics())
         get_setting_c.write(as_string)
 
     # start the analysis

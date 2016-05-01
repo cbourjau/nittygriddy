@@ -20,3 +20,8 @@ class Test_downloader(TestCase):
 
     def test_downloaded_something(self):
         utils.download("LHC10h_AOD160", 0.001)
+
+
+class Test_grid_features(TestCase):
+    def test_latest_aliphysics(self):
+        self.assertNotEqual(utils.get_latest_aliphysics(), "")

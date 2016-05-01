@@ -31,7 +31,6 @@
 
 enum {kLOCAL, kLITE, kPOD, kGRID};
 enum {kGRID_FULL, kGRID_OFFLINE, kGRID_TEST, kGRID_MERGE_ONLINE, kGRID_MERGE_OFFLINE};
-TString kALICE_PHYSICS = "vAN-20160405-1";
 
 void loadLibs(const TString extralibs, const Int_t runmode){
   if (runmode == kLOCAL || runmode == kGRID){
@@ -129,7 +128,7 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   }
   plugin->SetNtestFiles(1);
   //Set versions of used packages
-  plugin->SetAliPhysicsVersion(kALICE_PHYSICS);
+  plugin->SetAliPhysicsVersion(GetSetting("aliphysics_version").c_str());
 
   // Declare input data to be processed
   plugin->SetGridDataDir(GetSetting("datadir").c_str());
