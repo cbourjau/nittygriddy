@@ -32,6 +32,8 @@ std::string GetSetting(const std::string settingName) {{
       return "{par_files}";
     else if (settingName == "aliphysics_version")
       return "{aliphysics_version}";
+    else if (settingName == "ttl")
+      return "{ttl}";
     else 
       std::cout << "Invalid setting name: " << settingName << std::endl;
     return "";

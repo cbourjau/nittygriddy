@@ -110,7 +110,8 @@ def run(args):
                    nworkers=args.nworkers,
                    wait_for_gdb="true" if args.wait_for_gdb else "false",
                    aliphysics_version=utils.get_latest_aliphysics(),
-                   par_files=args.par_files if args.par_files else "")
+                   par_files=args.par_files if args.par_files else "",
+                   ttl=args.ttl)
         get_setting_c.write(as_string)
 
     # start the analysis
@@ -141,6 +142,7 @@ parser_run.add_argument('--folder_postfix', type=str, help="Attach to the end of
 parser_run.add_argument('--nworkers', type=str, help="Number of workers for proof lite", default="-1")
 parser_run.add_argument('--par_files', type=str, help="Patch aliphysics on the grid with par this file. Build par_files before with cd $ALICE_ROOT/../build; make MODULE.par; make -j$MJ install")
 parser_run.add_argument('--run_list', type=str, help="Overwrite default (comma seperated) run list for the given dataset (grid only)")
+parser_run.add_argument('--ttl', type=str, help="Number of seconds this job should live", default="30000")
 parser_run.add_argument('--wait_for_gdb', action='store_true', default=False, help="Pause the execution to allow for connecting gdb to the process")
 parser_run.set_defaults(op=run)
 

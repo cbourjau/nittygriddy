@@ -30,6 +30,7 @@
 #include "GetSetting.C"
 
 #endif
+#include <stdlib.h>     /* atoi */
 
 enum {kLOCAL, kLITE, kPOD, kGRID};
 enum {kGRID_FULL, kGRID_OFFLINE, kGRID_TEST, kGRID_MERGE_ONLINE, kGRID_MERGE_OFFLINE};
@@ -143,7 +144,7 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   plugin->SetExecutable(TString::Format("Exec_%s.sh", GetSetting("workdir").c_str()));
   plugin->SetJDLName(TString::Format("Task_%s.jdl", GetSetting("workdir").c_str()));
   plugin->SetDropToShell(false);  // do not open a shell
-  plugin->SetRunPrefix(GetSetting("run_number_prefix").c_str()); 
+  plugin->SetRunPrefix(GetSetting("run_number_prefix").c_str());
   plugin->AddRunList(GetSetting("run_list").c_str());
   plugin->SetGridOutputDir("output");
   plugin->SetMaxMergeFiles(25);
@@ -151,7 +152,7 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
 			   "event_stat.root");
   // Use run number as output folder names
   plugin->SetOutputToRunNo();
-  // plugin->SetTTL(15*3600);
+  plugin->SetTTL(atoi(GetSetting("ttl").c_str()));
   // Optionally set input format (default xml-single)
   plugin->SetInputFormat("xml-single");
   // Optionally modify job price (default 1)
