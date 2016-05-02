@@ -91,7 +91,7 @@ def run(args):
                    datadir=ds['datadir'],
                    data_pattern=ds['data_pattern'],
                    run_number_prefix=ds['run_number_prefix'],
-                   run_list=ds['run_list'],
+                   run_list=args.run_list if args.run_list else ds['run_list'],
                    is_mc=ds["is_mc"],
                    datatype=ds["datatype"],
                    runmode=args.runmode,
@@ -128,6 +128,7 @@ parser_run.add_argument('--folder-postfix', type=str,
                         help="Attach to the end of the folder name")
 parser_run.add_argument('--nworkers', type=str, help="Number of workers for proof lite",
                         default="-1")
+parser_run.add_argument('--run_list', type=str, help="Overwrite default (comma seperated) run list for the given dataset")
 parser_run.add_argument('--wait_for_gdb', action='store_true', default=False,
                         help="Pause the execution to allow for connecting gdb to the process")
 parser_run.set_defaults(op=run)
