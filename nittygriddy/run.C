@@ -196,7 +196,9 @@ void run(const std::string gridMode="")
   } else if (runmode == kPOD) {
     proofUrl += "pod://";
   }
-  TProof::Open(proofUrl);
+  if (proofUrl.Length()) {
+    TProof::Open(proofUrl);
+  }
 
   setUpIncludes(runmode);
 
