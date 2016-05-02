@@ -100,7 +100,10 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   AliAnalysisAlien *plugin = new AliAnalysisAlien();
 
   plugin->AddIncludePath("-I. -I$ROOTSYS/include -I$ALICE_ROOT/include -I$ALICE_PHYSICS/include");
-  plugin->SetAdditionalLibs("libOADB.so libSTEERBase.so");
+  plugin->SetAdditionalLibs(("libOADB.so libSTEERBase.so " + GetSetting("par_files")).c_str());
+  // if (GetSetting("par_files")  != "") {
+  //   plugin->SetupPar(GetSetting("par_files").c_str());
+  //   }
   plugin->SetOverwriteMode();
   plugin->SetExecutableCommand("aliroot -q -b");
   // The following option is necessary to write the merge jdl's

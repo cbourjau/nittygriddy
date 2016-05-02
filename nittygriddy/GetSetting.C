@@ -28,6 +28,8 @@ std::string GetSetting(const std::string settingName) {{
       return "{nworkers}";
     else if (settingName == "wait_for_gdb")
       return "{wait_for_gdb}";
+    else if (settingName == "par_files")
+      return "{par_files}";
     else if (settingName == "aliphysics_version")
       return "{aliphysics_version}";
     else 
