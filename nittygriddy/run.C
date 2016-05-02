@@ -27,6 +27,8 @@
 #include "AliMultSelectionTask.h"
 #include "AddTaskC2.C"
 
+#include "GetSetting.C"
+
 #endif
 
 enum {kLOCAL, kLITE, kPOD, kGRID};
@@ -134,9 +136,9 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   plugin->SetGridDataDir(GetSetting("datadir").c_str());
   plugin->SetDataPattern(GetSetting("data_pattern").c_str());
   plugin->SetGridWorkingDir(GetSetting("workdir").c_str());
-  plugin->SetAnalysisMacro("myAnalysisMacro.C");
-  plugin->SetExecutable("myAnalysisExec.sh");
-  plugin->SetJDLName("myTask.jdl");
+  plugin->SetAnalysisMacro(TString::Format("Macro_%s.C", GetSetting("workdir").c_str()));
+  plugin->SetExecutable(TString::Format("Exec_%s.sh", GetSetting("workdir").c_str()));
+  plugin->SetJDLName(TString::Format("Task_%s.jdl", GetSetting("workdir").c_str()));
   plugin->SetDropToShell(false);  // do not open a shell
   plugin->SetRunPrefix(GetSetting("run_number_prefix").c_str()); 
   plugin->AddRunList(GetSetting("run_list").c_str());
@@ -146,7 +148,7 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
 			   "event_stat.root");
   // Use run number as output folder names
   plugin->SetOutputToRunNo();
-  plugin->SetTTL(15*3600);
+  // plugin->SetTTL(15*3600);
   // Optionally set input format (default xml-single)
   plugin->SetInputFormat("xml-single");
   // Optionally modify job price (default 1)
