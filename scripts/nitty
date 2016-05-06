@@ -18,6 +18,7 @@ from nittygriddy import utils, settings
 # collect processes to be able to kill them
 procs = []
 
+
 class formatter_class(argparse.ArgumentDefaultsHelpFormatter,
                       argparse.RawTextHelpFormatter):
     pass
@@ -64,6 +65,8 @@ def prepare_par_files(args, output_dir):
     """
     Copy par files to output_dir, if any are required.
     """
+    if not args.par_files:
+        return
     par_dir = os.path.expandvars("$ALICE_PHYSICS/PARfiles/")
     for par_file in args.par_files.split(","):
         # make sure the is a .par extension
@@ -159,7 +162,10 @@ def merge(args):
     if ctypes.c_char_p(ROOT.gROOT.ProcessLine(r'GetSetting("runmode").c_str()')).value != "grid":
         raise ValueError("The data in this folder was not run on the grid!")
     if args.mergemode == 'online':
-        cmd = r'root -l -q -x "run.C(\"merge_online\")"'
+        if args.merge_runs:
+            cmd = r'root -l -q -x "run.C(\"merge_online_runs\")"'
+        else:
+            cmd = r'root -l -q -x "run.C(\"merge_online\")"'
     elif args.mergemode == 'offline':
         cmd = r'root -l -q -x "run.C(\"merge_offline\")"'
     # root does not like it if the stdout is piped and it uses some shell functionality
@@ -170,6 +176,7 @@ description_merge = """Merge the output of a previously run grid analysis. Must 
 executed from output folder of that analysis."""
 parser_merge = subparsers.add_parser('merge', description=description_merge)
 parser_merge.add_argument('mergemode', choices=('online', 'offline'))
+parser_merge.add_argument('--merge_runs', action='store_true', default=False, help="Merge over several runs (online)")
 parser_merge.set_defaults(op=merge)
 
 
