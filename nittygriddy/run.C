@@ -121,14 +121,10 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   else if (gridMode == "full"){
     plugin->SetRunMode(gridMode.c_str());
   }
-  else if (gridMode == "merge_online"){ // merge only up to the level of runs
+  else if (gridMode == "merge_online"){
     plugin->SetRunMode("terminate");
   }
-  else if (gridMode == "merge_online_runs"){ // merge also over runs
-    plugin->SetNrunsPerMaster(25);
-    plugin->SetRunMode("terminate");
-  }
-  else if (gridMode == "merge_offline"){  // merges all the latest merge stages together
+  else if (gridMode == "merge_offline"){
     plugin->SetRunMode("terminate");
     plugin->SetMergeViaJDL(false);
   }
