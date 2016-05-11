@@ -64,6 +64,8 @@ def prepare_par_files(args, output_dir):
     """
     Copy par files to output_dir, if any are required.
     """
+    if not args.par_files:
+        return
     par_dir = os.path.expandvars("$ALICE_PHYSICS/PARfiles/")
     for par_file in args.par_files.split(","):
         # make sure the is a .par extension
