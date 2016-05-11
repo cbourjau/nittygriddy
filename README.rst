@@ -16,9 +16,7 @@ And last but not least, nittygriddy does not do a "vendor lock-in": nittygriddy 
 
 Disclaimer
 ==========
-I am using nittygriddy daily for quite a while now and find it to be extremely helpful. I think/hope that I could also be a great tool for others. However, you should not consider this project stable, ie I might change which might require adjustments on the users side. But as I said earlier, if that were to happen and you don't want to use nittygriddy anymore, you can always use the generated `run.C` files independently. If you have issues with nittygriddy, would love to see datasets added or have any other comments and suggestions it is best to open an issue here on github.
-
-
+I am using nittygriddy daily for quite a while now and find it to be extremely helpful. I think/hope that it could also be a great tool for others. However, you should not consider this project stable, ie I might change things that require adjustments on the users side. But as I said earlier, if that were to happen and you don't want to use nittygriddy anymore, you can always use the generated `run.C` files independently. If you have issues with nittygriddy, would love to see datasets added, or have any other comments and suggestions it is best to open an issue here on github or create a pull request straight away.
 
 
 Installing nittygriddy
@@ -133,6 +131,9 @@ My analysis crashes miserably when running in Proof lite
 --------------------------------------------------------
 Proof lite is quite picky about initializing your task's members in the constructors. This makes it a great test for running on the grid, but the error message is rather cryptic. Check if you initialized all your members in the constructor.
 
+I get a crash if I do something grid related
+--------------------------------------------
+Do you have a valid alien-token? Its on the todo-list to ask for it more gracefully if its not present.
 
 Migrate to LEGO trains
 ----------------------
