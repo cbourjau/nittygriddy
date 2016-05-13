@@ -41,7 +41,7 @@ def datasets(args):
             raise ValueError("No download volume specified")
         elif not utils.get_datasets().get(args.download, False):
             raise ValueError("Dataset not found.")
-        utils.download(args.download, args.volume)
+        utils.download_dataset(args.download, args.volume)
 
 
 parser_datasets = subparsers.add_parser('datasets')
@@ -130,7 +130,7 @@ def run(args):
         # command to start the analysis
         cmd = ['root', '-l', '-q', 'run.C']
     else:
-        cmd = ['root', '-l', '-q', '-x', 'run.C(\"full\")']
+        cmd = ['root', '-l', '-q', '-b', '-x', 'run.C(\"full\")']
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     procs.append(p)
     for line in iter(p.stdout.readline, b''):
@@ -160,9 +160,9 @@ def merge(args):
     if ctypes.c_char_p(ROOT.gROOT.ProcessLine(r'GetSetting("runmode").c_str()')).value != "grid":
         raise ValueError("The data in this folder was not run on the grid!")
     if args.mergemode == 'online':
-        cmd = r'root -l -q -x "run.C(\"merge_online\")"'
+        cmd = r'root -b -l -q -x "run.C(\"merge_online\")"'
     elif args.mergemode == 'offline':
-        cmd = r'root -l -q -x "run.C(\"merge_offline\")"'
+        cmd = r'root -b -l -q -x "run.C(\"merge_offline\")"'
     # root does not like it if the stdout is piped and it uses some shell functionality
     # thus, using call on the whole string and shell True
     subprocess.check_call(cmd, shell=True)
