@@ -43,8 +43,38 @@ def get_size(search_string):
         total_size += os.path.getsize(path2file)
     return total_size
 
+def download_file(alien_path, local_path):
+    """
+    Download the file `alien` to `local`
 
-def download(dataset, volume):
+    Parameters
+    ----------
+    alien_path, local_path : string
+        Full path to files
+    """
+    if os.path.isfile(local_path):
+        raise ValueError("Local file exists")
+    try:
+        os.makedirs(os.path.dirname(local_path))
+    except OSError:
+        pass
+    alien_path = "alien:/" + alien_path
+    cp_cmd = ['alien_cp', '-m', '-s', alien_path, local_path]
+    p = subprocess.Popen(cp_cmd,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT)
+    p.wait()
+    if p.returncode != 0:
+        print "\n", p.stdout.read()
+        print("An error occued while downloading {}; "
+              "The broken file was deleted.".format(local_path))
+        try:
+            os.remove(local_path)
+        except OSError:
+            pass
+
+
+def download_dataset(dataset, volume):
     """
     Download files from the given dataset until the target volume is met
     Parameters
@@ -74,32 +104,15 @@ def download(dataset, volume):
         run_files = subprocess.check_output(find_cmd).split()
         run_files.sort()
 
-        for alien_path2file in run_files:
+        for alien_path in run_files:
             # alien_find puts some jibberish; stop at first line without path
-            if not alien_path2file.startswith("/"):
+            if not alien_path.startswith("/"):
                 break
             # paths to file
-            local_path = os.path.join(local_data_dir, alien_path2file.lstrip('/'))
-            alien_path = "alien:/" + alien_path2file
-            if not os.path.isfile(local_path):
-                try:
-                    os.makedirs(os.path.dirname(local_path))
-                except OSError:
-                    pass
-                cp_cmd = ['alien_cp', '-m', '-s', alien_path, local_path]
-                p = subprocess.Popen(cp_cmd,
-                                     stdout=subprocess.PIPE,
-                                     stderr=subprocess.STDOUT)
-                p.wait()
-                if p.returncode != 0:
-                    print "\n", p.stdout.read()
-                    print("An error occued while downloading {}; "
-                          "The broken file was deleted.".format(local_path))
-                    try:
-                        os.remove(local_path)
-                    except OSError:
-                        pass
-            else:
+            local_path = os.path.join(local_data_dir, alien_path.lstrip('/'))
+            try:
+                download_file(alien_path, local_path)
+            except ValueError:
                 if not warned_about_skipped:
                     warned_about_skipped = True
                     print "Some files were present and were not redownloaded"

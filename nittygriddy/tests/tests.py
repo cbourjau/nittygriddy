@@ -16,10 +16,10 @@ class Test_downloader(TestCase):
             pass
 
     def test_invalid_dataset(self):
-        self.assertRaises(KeyError, utils.download, "invalid_dataset", 5)
+        self.assertRaises(KeyError, utils.download_dataset, "invalid_dataset", 5)
 
     def test_downloaded_something(self):
-        utils.download("LHC10h_AOD160", 0.001)
+        utils.download_dataset("LHC10h_AOD160", 0.001)
 
 
 class Test_grid_features(TestCase):
