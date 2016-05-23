@@ -18,6 +18,7 @@ from nittygriddy import utils, settings
 # collect processes to be able to kill them
 procs = []
 
+
 class formatter_class(argparse.ArgumentDefaultsHelpFormatter,
                       argparse.RawTextHelpFormatter):
     pass

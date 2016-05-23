@@ -43,6 +43,7 @@ def get_size(search_string):
         total_size += os.path.getsize(path2file)
     return total_size
 
+
 def download_file(alien_path, local_path):
     """
     Download the file `alien` to `local`
