@@ -1,6 +1,8 @@
 import os
 
 from unittest import TestCase
+import subprocess
+
 from nittygriddy import utils, settings
 
 
@@ -33,3 +35,10 @@ class Test_find_latest_merge_files(TestCase):
 
     def test_find_something(self):
         self.assertNotEqual(0, len(utils.find_latest_merge_results("20160504_0035_15j_CINT7_multFluc")))
+
+
+class Test_environment(TestCase):
+    def tes_alien_token_invalid(self):
+        cmd = ['alien-token-destroy']
+        subprocess.check_output(cmd)
+        self.assertFalse(utils.check_alien_token())

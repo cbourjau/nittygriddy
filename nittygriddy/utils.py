@@ -174,3 +174,21 @@ def find_latest_merge_results(workdir):
     min_nfolders = min([len(path.split("/")) for path in finds])
     top_level_files = [path for path in finds if len(path.split("/")) == min_nfolders]
     return top_level_files
+
+
+def check_alien_token():
+    """
+    Check if a valid alien toke exists
+
+    Returns
+    -------
+    bool :
+        True if toke is valid, else false - daaaah...
+
+    """
+    cmd = ['alien-token-info']
+    try:
+        subprocess.check_call(cmd)
+    except subprocess.CalledProcessError:
+        return False
+    return True
