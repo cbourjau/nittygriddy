@@ -136,3 +136,41 @@ def get_latest_aliphysics():
     if tagtime.hour < 18:
         tagtime -= timedelta(days=1)
     return "vAN-{}-1".format(tagtime.strftime("%Y%m%d"))
+
+
+def find_latest_merge_results(workdir):
+    """
+    Find the files resulting from the latest online merge. It relies on
+   the resulting files being called `AnalysisResults.root`
+
+    Parameters
+    ----------
+    workdir : str
+        name of the grid workdir
+
+    Returns
+    -------
+    list :
+        List of full alien paths to the latest merge files
+
+    Raises
+    ------
+    ValueError :
+        workdir does not exist in user directory
+
+    """
+    user_name = subprocess.check_output(['alien_whoami']).strip()
+    alien_workdir = os.path.join("/alice/cern.ch/user/{}/{}/".format(user_name[0], user_name), workdir)
+    try:
+        subprocess.check_output(['alien_ls', alien_workdir])
+    except subprocess.CalledProcessError:
+        raise ValueError("{} does not exist".format(alien_workdir))
+
+    cmd = ['alien_find', alien_workdir, 'AnalysisResults.root']
+    finds = subprocess.check_output(cmd).strip().split()
+    # alien_find puts some jibberish; stop at first line without path
+    finds = [path for path in finds if path.startswith("/")]
+    # find shortest path
+    min_nfolders = min([len(path.split("/")) for path in finds])
+    top_level_files = [path for path in finds if len(path.split("/")) == min_nfolders]
+    return top_level_files
