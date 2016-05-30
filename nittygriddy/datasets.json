@@ -38,16 +38,6 @@
 	"run_number_prefix": "",
 	"run_list": "244918 244975 244982 244983 245064"
     },
-    "LHC15h_muon_calo_pass2_AOD": {
-	"datatype": "aod",
-	"system": "pp",
-	"is_mc": "false",
-	"datadir": "/alice/data/2015/LHC15h",
-	"data_pattern": "muon_calo_pass2/AOD/*/AliAOD.root",
-	"run_number_prefix": "000",
-	"run_list": "232914, 232916, 232977, 232986, 232993, 232995, 233020, 233059, 233061, 233093, 233116, 233120, 233144, 233169, 233172, 233217, 233232, 233233, 233239, 233242, 233361, 233465, 233472, 233614, 233621, 233627, 233743, 233799, 233828, 233830, 233837, 233858, 233912, 233969, 233971, 233972, 233973, 233974, 233975, 233976, 233977, 233978, 234031, 234039, 234048, 234049, 234050",
-	"notes": "runs checked for mult selection calib"
-    },
     "LHC15i_muon_calo_pass2_AOD": {
 	"datatype": "aod",
 	"system": "pp",
