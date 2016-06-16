@@ -1,9 +1,11 @@
 from glob import glob
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
+import urllib2
 
 from nittygriddy import settings
 
@@ -127,15 +129,14 @@ def download_dataset(dataset, volume):
 
 def get_latest_aliphysics():
     """
-    Return the latest aliphysics version string as expected by the grid plugin.
+    Find the latest version of aliphysics deployed on the grid.
     """
-    from datetime import datetime, timedelta
-    from pytz import timezone
-    tz = timezone('Europe/Zurich')
-    tagtime = datetime.now(tz=tz)
-    if tagtime.hour < 18:
-        tagtime -= timedelta(days=1)
-    return "vAN-{}-1".format(tagtime.strftime("%Y%m%d"))
+    response = urllib2.urlopen('http://alimonitor.cern.ch/packages/')
+    html = response.read()
+    tag_pattern = re.compile(r"(vAN-\d{8}-\d)")
+    # make a set to avoid dup and sort to find the latest
+    latest_tag = sorted(set(re.findall(tag_pattern, html)))[-1]
+    return latest_tag
 
 
 def find_latest_merge_results(workdir):
