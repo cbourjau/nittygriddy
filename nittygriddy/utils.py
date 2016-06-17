@@ -130,13 +130,15 @@ def download_dataset(dataset, volume):
 def get_latest_aliphysics():
     """
     Find the latest version of aliphysics deployed on the grid.
+
+    Returns
+    -------
+    string :
+        tag as its usable in run.C; eg., 'vAN-20160606-1'
     """
-    response = urllib2.urlopen('http://alimonitor.cern.ch/packages/')
-    html = response.read()
-    tag_pattern = re.compile(r"(vAN-\d{8}-\d)")
-    # make a set to avoid dup and sort to find the latest
-    latest_tag = sorted(set(re.findall(tag_pattern, html)))[-1]
-    return latest_tag
+    html = urllib2.urlopen('http://alimonitor.cern.ch/packages/').read()
+    tag_pattern = r'vAN-\d{8}-\d+'
+    return sorted(re.findall(tag_pattern, html)).pop()
 
 
 def find_latest_merge_results(workdir):
