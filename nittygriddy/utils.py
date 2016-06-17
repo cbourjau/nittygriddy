@@ -195,3 +195,28 @@ def check_alien_token():
     except subprocess.CalledProcessError:
         return False
     return True
+
+
+def prepare_par_files(par_files, output_dir):
+    """
+    Copy par files to output_dir
+
+    Parameters
+    ----------
+    par_files : str
+        Comma separated string of par file names
+    output_dir : str
+        Folder to where the par files should be copied
+
+    Raises
+    ------
+    ValueError :
+        If par file could not be found
+    """
+    par_dir = os.path.expandvars("$ALICE_PHYSICS/PARfiles/")
+    for par_file in par_files.split(","):
+        # make sure the is a .par extension
+        try:
+            shutil.copy(os.path.join(par_dir, par_file), output_dir)
+        except IOError:
+            raise ValueError("Par file {} could not be copied!".format(par_file))

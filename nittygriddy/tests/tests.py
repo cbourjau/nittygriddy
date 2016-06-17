@@ -29,6 +29,9 @@ class Test_grid_features(TestCase):
     def test_latest_aliphysics(self):
         self.assertNotEqual(utils.get_latest_aliphysics(), "")
 
+    def test_par_file(self):
+        self.assertRaises(ValueError, utils.prepare_par_files, "I_dont_exists.par", "test_folder")
+
 
 class Test_find_latest_merge_files(TestCase):
     def test_workdir_does_not_exist(self):
@@ -43,3 +46,4 @@ class Test_environment(TestCase):
         cmd = ['alien-token-destroy']
         subprocess.check_output(cmd)
         self.assertFalse(utils.check_alien_token())
+
