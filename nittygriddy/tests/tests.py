@@ -32,6 +32,10 @@ class Test_grid_features(TestCase):
     def test_par_file(self):
         self.assertRaises(ValueError, utils.prepare_par_files, "I_dont_exists.par", "test_folder")
 
+    def test_find_user_grid_dir(self):
+        grid_home = utils.find_user_grid_dir()
+        self.assertRegexpMatches(grid_home, '/alice/cern.ch/user/\w/\w+/')
+
 
 class Test_find_latest_merge_files(TestCase):
     def test_workdir_does_not_exist(self):

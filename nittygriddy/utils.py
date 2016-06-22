@@ -144,7 +144,7 @@ def get_latest_aliphysics():
 def find_latest_merge_results(workdir):
     """
     Find the files resulting from the latest online merge. It relies on
-   the resulting files being called `AnalysisResults.root`
+    the resulting files being called `AnalysisResults.root`
 
     Parameters
     ----------
@@ -162,8 +162,7 @@ def find_latest_merge_results(workdir):
         workdir does not exist in user directory
 
     """
-    user_name = subprocess.check_output(['alien_whoami']).strip()
-    alien_workdir = os.path.join("/alice/cern.ch/user/{}/{}/".format(user_name[0], user_name), workdir)
+    alien_workdir = os.path.join(find_user_grid_dir(), workdir)
     try:
         subprocess.check_output(['alien_ls', alien_workdir])
     except subprocess.CalledProcessError:
@@ -220,3 +219,17 @@ def prepare_par_files(par_files, output_dir):
             shutil.copy(os.path.join(par_dir, par_file), output_dir)
         except IOError:
             raise ValueError("Par file {} could not be copied!".format(par_file))
+
+
+def find_user_grid_dir():
+    """
+    Figure out the user's grid home directory.
+
+    Return
+    ------
+    string :
+        Absolute path to user's home directory
+    """
+    user_name = subprocess.check_output(['alien_whoami']).strip()
+    alien_home = "/alice/cern.ch/user/{}/{}/".format(user_name[0], user_name)
+    return alien_home
