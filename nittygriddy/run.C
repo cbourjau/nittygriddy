@@ -217,7 +217,6 @@ void run(const std::string gridMode="")
   //mgr->SetMCtruthEventHandler(handler);
 
   if (runmode == kGRID) {
-    gROOT->LoadMacro("./CreateAlienHandler.C");
     AliAnalysisGrid *alienHandler = CreateAlienHandler(gridMode);
     if (!alienHandler) return;
     mgr->SetGridHandler(alienHandler);
