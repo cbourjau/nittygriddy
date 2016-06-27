@@ -141,7 +141,7 @@ def get_latest_aliphysics():
     return sorted(re.findall(tag_pattern, html)).pop()
 
 
-def find_latest_merge_results(workdir):
+def find_latest_merge_results(alien_workdir):
     """
     Find the files resulting from the latest online merge. It relies on
     the resulting files being called `AnalysisResults.root`
@@ -149,7 +149,7 @@ def find_latest_merge_results(workdir):
     Parameters
     ----------
     workdir : str
-        name of the grid workdir
+        Absolute alien path to grid workdir
 
     Returns
     -------
@@ -162,7 +162,6 @@ def find_latest_merge_results(workdir):
         workdir does not exist in user directory
 
     """
-    alien_workdir = os.path.join(find_user_grid_dir(), workdir)
     try:
         subprocess.check_output(['alien_ls', alien_workdir])
     except subprocess.CalledProcessError:
@@ -233,3 +232,61 @@ def find_user_grid_dir():
     user_name = subprocess.check_output(['alien_whoami']).strip()
     alien_home = "/alice/cern.ch/user/{}/{}/".format(user_name[0], user_name)
     return alien_home
+
+
+def find_sources_of_merged_files(merge_results):
+    """
+    Find the files used for an online merge. It relies on
+    the involved files being called `AnalysisResults.root`
+
+    Parameters
+    ----------
+    merge_results : list
+        alien path to the succesful merge results
+
+    Returns
+    -------
+    list :
+        List of full alien paths to the pre merges' source files
+    """
+    sources = []
+    for merge_result in merge_results:
+        # make a search string for the source files
+        # this assumes that the source files are in folders below
+        # the given AnalysisResults.root file
+        # Thus: /alienpath/AnalysisResults.root -> /alienpath/*/
+        search_str_sources = merge_result.replace("AnalysisResults.root", "*/")
+        cmd = ['alien_find', search_str_sources, 'AnalysisResults.root']
+        finds = subprocess.check_output(cmd).strip().split()
+        # alien_find puts some jibberish; stop at first line without path
+        finds = [path for path in finds if path.startswith("/")]
+
+        # Safety: make sure that the paths of the sources are longer
+        # than their merge result
+        for find in finds:
+            if len(merge_result) >= len(find):
+                raise ValueError("Algorithm for finding merge source files produced unexpected results")
+        sources += finds
+    return sources
+
+
+def yn_choice(message, default='y'):
+    """
+    Querry the user if he or she wants to proceed.
+
+    Parameters
+    ----------
+    message :
+        Yes/No message presented to the user.
+    default :
+        Default action if no input is given
+
+    Returns
+    -------
+    bool :
+        `True` for yes, else `False`
+    """
+    choices = 'Y/n' if default.lower() in ('y', 'yes') else 'y/N'
+    choice = raw_input("%s (%s) " % (message, choices))
+    values = ('y', 'yes', '') if default == 'y' else ('y', 'yes')
+    return choice.strip().lower() in values

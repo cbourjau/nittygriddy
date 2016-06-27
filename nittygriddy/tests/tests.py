@@ -36,13 +36,23 @@ class Test_grid_features(TestCase):
         grid_home = utils.find_user_grid_dir()
         self.assertRegexpMatches(grid_home, '/alice/cern.ch/user/\w/\w+/')
 
+    def find_latest_merge_results(self):
+        # a test dir set up under alien:///alice/cern.ch/user/c/cbourjau/
+        workdir = "nitty_test"
+        # try with not absolute workdir:
+        self.assertRaises(ValueError, utils.find_latest_merge_results, workdir)
+        # with absolut alien path
+        alien_workdir = os.path.join(utils.find_user_grid_dir(), workdir)
+        self.assertEqual(utils.find_latest_merge_results(alien_workdir),
+                         ['/alice/cern.ch/user/c/cbourjau/nitty_test/AnalysisResults.root'])
 
-class Test_find_latest_merge_files(TestCase):
-    def test_workdir_does_not_exist(self):
-        self.assertRaises(ValueError, utils.find_latest_merge_results, "asdfasdfasdf")
-
-    def test_find_something(self):
-        self.assertNotEqual(0, len(utils.find_latest_merge_results("20160504_0035_15j_CINT7_multFluc")))
+    def test_find_merge_sources(self):
+        workdir = "nitty_test"
+        alien_workdir = os.path.join(utils.find_user_grid_dir(), workdir)
+        merge_results = utils.find_latest_merge_results(alien_workdir)
+        self.assertEqual(utils.find_sources_of_merged_files(merge_results),
+                         ['/alice/cern.ch/user/c/cbourjau/nitty_test/001/AnalysisResults.root',
+                          '/alice/cern.ch/user/c/cbourjau/nitty_test/002/AnalysisResults.root'])
 
 
 class Test_environment(TestCase):
@@ -50,4 +60,3 @@ class Test_environment(TestCase):
         cmd = ['alien-token-destroy']
         subprocess.check_output(cmd)
         self.assertFalse(utils.check_alien_token())
-
