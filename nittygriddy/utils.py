@@ -8,6 +8,7 @@ import sys
 import urllib2
 
 from nittygriddy import settings
+from nittygriddy.alienTokenError import AlienTokenError
 
 
 def get_datasets():
@@ -181,18 +182,20 @@ def check_alien_token():
     """
     Check if a valid alien toke exists
 
-    Returns
-    -------
-    bool :
-        True if toke is valid, else false - daaaah...
-
+    Raises
+    ------
+    AlienTokenError :
+        If there was an error checking the token or if the existing token is invalid
     """
     cmd = ['alien-token-info']
     try:
-        subprocess.check_call(cmd)
+        output = subprocess.check_output(cmd)
     except subprocess.CalledProcessError:
-        return False
-    return True
+        raise AlienTokenError("Could not call `alien-token-info` to check token.")
+    for l in output.splitlines():
+        if "Token is still valid!" in l:
+            return True
+    return AlienTokenError("Alien token is invalid. Call `alien-token-init` before running nittygriddy.")
 
 
 def prepare_par_files(par_files, output_dir):
@@ -229,6 +232,7 @@ def find_user_grid_dir():
     string :
         Absolute path to user's home directory
     """
+    check_alien_token()
     user_name = subprocess.check_output(['alien_whoami']).strip()
     alien_home = "/alice/cern.ch/user/{}/{}/".format(user_name[0], user_name)
     return alien_home

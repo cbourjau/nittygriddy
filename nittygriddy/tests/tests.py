@@ -4,6 +4,7 @@ from unittest import TestCase, skip
 import subprocess
 
 from nittygriddy import utils, settings
+from nittygriddy.alienTokenError import AlienTokenError
 
 
 class Test_downloader(TestCase):
@@ -56,7 +57,14 @@ class Test_grid_features(TestCase):
 
 
 class Test_environment(TestCase):
-    def tes_alien_token_invalid(self):
+    """
+    These tests require a valid alien token.
+    """
+    def test_alien_token_valid(self):
+        self.assertTrue(utils.check_alien_token())
+
+    @skip("Skip token invalid test")
+    def test_alien_token_invalid(self):
         cmd = ['alien-token-destroy']
         subprocess.check_output(cmd)
-        self.assertFalse(utils.check_alien_token())
+        self.assertRaises(AlienTokenError, utils.check_alien_token)
