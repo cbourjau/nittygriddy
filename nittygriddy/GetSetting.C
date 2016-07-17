@@ -6,9 +6,7 @@
 #include <iostream>
 
 std::string GetSetting(const std::string settingName) {{
-    if (settingName == "overwrite_oadb_period")
-      return "{overwrite_oadb_period}";
-    else if (settingName == "workdir")
+    if (settingName == "workdir")
       return "{workdir}";
     else if (settingName == "datadir")
       return "{datadir}";

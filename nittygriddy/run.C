@@ -223,13 +223,6 @@ void run(const std::string gridMode="")
   }
 
   // Add tasks
-  gROOT->LoadMacro("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
-  AliMultSelectionTask * task = AddTaskMultSelection(kFALSE);
-  // I think SetAlternateOADBforEstimators is depreciated (comment in .h file)
-  if (GetSetting("overwrite_oadb_period") != ""){
-    task->SetAlternateOADBforEstimators(GetSetting("overwrite_oadb_period").c_str());
-  }
-
   gROOT->LoadMacro("./ConfigureWagon.C");
   ConfigureWagon();
 
