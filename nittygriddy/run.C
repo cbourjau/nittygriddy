@@ -25,7 +25,6 @@
 #include "AliAnalysisGrid.h"
 #include "AliAnalysisAlien.h"
 #include "AliMultSelectionTask.h"
-#include "AddTaskC2.C"
 
 #include "GetSetting.C"
 
@@ -76,7 +75,13 @@ void loadLibs(const TString extralibs, const Int_t runmode){
 }
 
 TChain* makeChain() {
-  TChain * chain = new TChain ("aodTree");
+  TChain * chain = 0;
+  if (GetSetting("datatype") == "aod") {
+    chain = new TChain ("aodTree");
+  }
+  if (GetSetting("datatype") == "esd") {
+    chain = new TChain ("aodTree");
+  }
   TString incollection = "./input_files.dat";
   ifstream file_collect(incollection.Data());
   TString line;
@@ -171,9 +176,9 @@ void run(const std::string gridMode="")
   Int_t max_events = -1;
   Int_t runmode = -1;
   if (GetSetting("wait_for_gdb") == "true"){
-    cout << "Execution is paused so that you cann attach gdb to the running process:" << endl;
-    cout << "gdb -p " << gSystem->GetPid() << endl;
-    cout << "Press any key to continue" << endl;
+    std::cout << "Execution is paused so that you cann attach gdb to the running process:" << std::endl;
+    std::cout << "gdb -p " << gSystem->GetPid() << std::endl;
+    std::cout << "Press any key to continue" << std::endl;
     std::cin.ignore();
   }
   if (GetSetting("runmode") == "local")
@@ -209,12 +214,19 @@ void run(const std::string gridMode="")
   TString analysisName("AnalysisResults");
   mgr->SetCommonFileName(analysisName + TString(".root"));
 
-  // Set Handlers TODO: depends on dataset type
-  AliVEventHandler* aodH = new AliAODInputHandler;
-  mgr->SetInputEventHandler(aodH);
-  //AliMCEventHandler* handler = new AliMCEventHandler;
-  //handler->SetReadTR(kTRUE);
-  //mgr->SetMCtruthEventHandler(handler);
+  if (GetSetting("datatype") == "aod") {
+    AliVEventHandler* aodH = new AliAODInputHandler;
+    mgr->SetInputEventHandler(aodH);
+  }
+  if (GetSetting("datatype") == "esd") {
+    AliVEventHandler* esdH = new AliESDInputHandler;
+    mgr->SetInputEventHandler(esdH);
+  }
+  else if (GetSetting("is_mc") == "true") {
+    AliMCEventHandler* handler = new AliMCEventHandler;
+    handler->SetReadTR(kTRUE);
+    mgr->SetMCtruthEventHandler(handler);
+  }
 
   if (runmode == kGRID) {
     AliAnalysisGrid *alienHandler = CreateAlienHandler(gridMode);

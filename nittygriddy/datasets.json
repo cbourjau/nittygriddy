@@ -97,7 +97,7 @@
 	"run_list": "244340, 244351",
 	"notes": "pp 5 TeV, PYTHIA6 Perugia-2011, LHC15n anchors, ALIROOT-6471"
     },
-        "LHC15g3a3": {
+    "LHC15g3a3": {
 	"datatype": "aod",
 	"system": "pp",
 	"is_mc": "true",
