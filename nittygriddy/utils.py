@@ -215,8 +215,10 @@ def prepare_par_files(par_files, output_dir):
         If par file could not be found
     """
     par_dir = os.path.expandvars("$ALICE_PHYSICS/PARfiles/")
-    for par_file in par_files.split(","):
-        # make sure the is a .par extension
+    for par_file in par_files.split():
+        if par_file.startswith("lib") and par_file.endswith(".so"):
+            continue
+        # only copy par files, libs are loaded from grid installation
         try:
             shutil.copy(os.path.join(par_dir, par_file), output_dir)
         except IOError:
