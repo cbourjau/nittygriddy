@@ -92,7 +92,7 @@
 	"system": "pp",
 	"is_mc": "true",
 	"datadir": "/alice/sim/2015/LHC15l1b/",
-	"data_pattern": "*/AliAOD.root",
+	"data_pattern": "AOD/*/AliAOD.root",
 	"run_number_prefix": "",
 	"run_list": "244340, 244351",
 	"notes": "pp 5 TeV, PYTHIA6 Perugia-2011, LHC15n anchors, ALIROOT-6471"
@@ -102,7 +102,7 @@
 	"system": "pp",
 	"is_mc": "true",
 	"datadir": "/alice/sim/2015/LHC15g3a3/",
-	"data_pattern": "*/AliAOD.root",
+	"data_pattern": "AOD176/*/AliAOD.root",
 	"run_number_prefix": "",
 	"run_list": "225000, 225011, 225016, 225026, 225031, 225035, 225037, 225041, 225043, 225050, 225051, 225052, 225106, 225305, 225307, 225309, 225310, 225313, 225314, 225315, 225322, 225576, 225578, 225579, 225580, 225582, 225586, 225587, 225705, 225707, 225708, 225709, 225710, 225716, 225717, 225719, 225753, 225757, 225762, 225763, 225766, 225768, 226062, 226170, 226220, 226225, 226444, 226445, 226452, 226466, 226468, 226472, 226476, 226483, 226495, 226500",
 	"notes": "pp 13 TeV, again PYTHIA8 Monash-2013, LHC15f anchors, ALIROOT-6232"
