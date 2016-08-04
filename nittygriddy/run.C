@@ -26,53 +26,12 @@
 #include "AliAnalysisAlien.h"
 #include "AliMultSelectionTask.h"
 
-#include "GetSetting.C"
-
 #endif
+#include "GetSetting.C"
 #include <stdlib.h>     /* atoi */
 
 enum {kLOCAL, kLITE, kPOD, kGRID};
 enum {kGRID_FULL, kGRID_OFFLINE, kGRID_TEST, kGRID_MERGE_ONLINE, kGRID_MERGE_OFFLINE};
-
-void loadLibs(const TString extralibs, const Int_t runmode){
-  if (runmode == kLOCAL || runmode == kGRID){
-    // for running with root only
-    gSystem->Load("libTree.so");
-    gSystem->Load("libGeom.so");
-    gSystem->Load("libVMC.so");
-    gSystem->Load("libSTEERBase.so");
-    gSystem->Load("libESD.so");
-    gSystem->Load("libAOD.so"); 
-
-    // load extra analysis libs
-    TIter it(extralibs.Tokenize(" "));
-    TObjString *lib = 0;
-    while ((lib = dynamic_cast<TObjString *>(it()))){
-      if (gSystem->Load(lib->String()) < 0) {
-	std::cout << "Error loading " << lib->String() << std::endl;
-      }
-    }
-  }
-  else{
-    TList *list = new TList();
-    list->Add(new TNamed("ALIROOT_EXTRA_LIBS", extralibs.ReplaceAll(" ", ":").Data()));
-    TString alicePar;
-    
-    if ((runmode == kLITE)){
-      alicePar  = "$ALICE_ROOT/ANALYSIS/macros/AliRootProofLite.par";
-    }
-    
-    if (runmode == kPOD){
-      // A single AliRoot package for *all* AliRoot versions: new on VAF
-      alicePar = "/afs/cern.ch/alice/offline/vaf/AliceVaf.par";
-      list->Add(new TNamed("ALIROOT_ENABLE_ALIEN", "1"));  // important: creates token on every PROOF worker
-    }
-    gProof->UploadPackage(alicePar.Data());
-    gProof->EnablePackage(alicePar.Data(), list);  // this "list" is the same as always
-    std::cout << "enabled packages: " << std::endl;
-    gProof->ShowEnabledPackages();
-  }
-}
 
 TChain* makeChain() {
   TChain * chain = 0;
@@ -96,8 +55,10 @@ void setUpIncludes(Int_t runmode) {
   // Set the include directories
   // gProof is without -I :P and gSystem has to be set for all runmodes
   gSystem->AddIncludePath("-I$ALICE_ROOT/include");
+  gSystem->AddIncludePath("-I$ALICE_PHYSICS/include");
   if (runmode == kLITE){
     gProof->AddIncludePath("$ALICE_ROOT/include", kTRUE);
+    gProof->AddIncludePath("$ALICE_PHYSICS/include", kTRUE);
   }
 }
 
@@ -161,9 +122,8 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   // Optionally set input format (default xml-single)
   plugin->SetInputFormat("xml-single");
   // Optionally modify job price (default 1)
-  plugin->SetPrice(1);      
+  plugin->SetPrice(1);
   // Optionally modify split mode (default 'se')    
-  //plugin->SetSplitMaxInputFileNumber();
   plugin->SetSplitMode("se");
   return plugin;
 };
@@ -172,7 +132,7 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
 void run(const std::string gridMode="")
 {
   // load GetSetting.C macro to allow access to settings for this particular dataset
-  gROOT->LoadMacro("./GetSetting.C");
+  // gROOT->LoadMacro("./GetSetting.C");
   Int_t max_events = -1;
   Int_t runmode = -1;
   if (GetSetting("wait_for_gdb") == "true"){
@@ -207,7 +167,7 @@ void run(const std::string gridMode="")
   }
 
   setUpIncludes(runmode);
-
+  // loadLibsNonGrid();
   // Create  and setup the analysis manager
   AliAnalysisManager *mgr = new AliAnalysisManager();
 
@@ -235,8 +195,8 @@ void run(const std::string gridMode="")
   }
 
   // Add tasks
-  gROOT->LoadMacro("./ConfigureWagon.C");
-  ConfigureWagon();
+  gROOT->LoadMacro("./ConfigureWagon.C+");
+  gROOT->ProcessLine("ConfigureWagon()");
 
   if (!mgr->InitAnalysis()) return;
   mgr->PrintStatus();
