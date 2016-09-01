@@ -99,6 +99,10 @@ def download_dataset(dataset, volume):
     warned_about_skipped = False
     for run in ds["run_list"].split(","):
         run = run.strip()  # get rid of spaces around the number
+        try:
+            int(run)
+        except ValueError:
+            raise ValueError("Malformated run number. Check run list!")
         search_string = os.path.join(ds["datadir"],
                                      ds["run_number_prefix"] + str(run),
                                      ds["data_pattern"])
