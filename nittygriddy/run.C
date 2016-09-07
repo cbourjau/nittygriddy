@@ -68,9 +68,7 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
 
   plugin->AddIncludePath("-I. -I$ROOTSYS/include -I$ALICE_ROOT/include -I$ALICE_PHYSICS/include");
   plugin->SetAdditionalLibs(("libOADB.so libSTEERBase.so " + GetSetting("par_files")).c_str());
-  // if (GetSetting("par_files")  != "") {
-  //   plugin->SetupPar(GetSetting("par_files").c_str());
-  //   }
+
   plugin->SetOverwriteMode();
   plugin->SetExecutableCommand("aliroot -q -b");
   // The following option is necessary to write the merge jdl's
@@ -98,7 +96,6 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
     std::cout << "Invalid gridMode!" << std::endl;
     assert(0);
   }
-  plugin->SetNtestFiles(1);
   //Set versions of used packages
   plugin->SetAliPhysicsVersion(GetSetting("aliphysics_version").c_str());
 
@@ -114,17 +111,13 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   plugin->AddRunList(GetSetting("run_list").c_str());
   plugin->SetGridOutputDir("output");
   plugin->SetMaxMergeFiles(25);
+  // Maximum number of files to be processed per subjob
+  plugin->SetSplitMaxInputFileNumber(atoi(GetSetting("max_files_subjob").c_str()));
   plugin->SetMergeExcludes("EventStat_temp.root"
 			   "event_stat.root");
   // Use run number as output folder names
   plugin->SetOutputToRunNo();
   plugin->SetTTL(atoi(GetSetting("ttl").c_str()));
-  // Optionally set input format (default xml-single)
-  plugin->SetInputFormat("xml-single");
-  // Optionally modify job price (default 1)
-  plugin->SetPrice(1);
-  // Optionally modify split mode (default 'se')    
-  plugin->SetSplitMode("se");
   return plugin;
 };
 
