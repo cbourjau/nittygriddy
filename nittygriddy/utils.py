@@ -300,3 +300,24 @@ def yn_choice(message, default='y'):
     choice = raw_input("%s (%s) " % (message, choices))
     values = ('y', 'yes', '') if default == 'y' else ('y', 'yes')
     return choice.strip().lower() in values
+
+
+def prepare_get_setting_c_file(output_dir, args):
+    ds = get_datasets()[args.dataset]
+    with open(os.path.join(output_dir, "GetSetting.C"), "w") as get_setting_c:
+        as_string = get_template_GetSetting().\
+            format(workdir=os.path.split(output_dir)[1],
+                   datadir=ds['datadir'],
+                   data_pattern=ds['data_pattern'],
+                   run_number_prefix=ds['run_number_prefix'],
+                   run_list=args.run_list if args.run_list else ds['run_list'],
+                   is_mc=ds["is_mc"],
+                   datatype=ds["datatype"],
+                   runmode=args.runmode,
+                   nworkers=args.nworkers,
+                   wait_for_gdb="true" if args.wait_for_gdb else "false",
+                   aliphysics_version=get_latest_aliphysics() if args.runmode == "grid" else "",
+                   par_files=args.par_files if args.par_files else "",
+                   ttl=args.ttl,
+                   max_files_subjob=args.max_files_subjob)
+        get_setting_c.write(as_string)

@@ -3,7 +3,7 @@ import os
 from unittest import TestCase, skip
 import subprocess
 
-from nittygriddy import utils, settings
+from nittygriddy import utils, settings, parser
 from nittygriddy.alienTokenError import AlienTokenError
 
 
@@ -68,3 +68,15 @@ class Test_environment(TestCase):
         cmd = ['alien-token-destroy']
         subprocess.check_output(cmd)
         self.assertRaises(AlienTokenError, utils.check_alien_token)
+
+
+class Test_create_GetSetting_c_file(TestCase):
+    """
+    Test the create of the GetSetting.C file
+    """
+    def test_create_getSetting_c(self):
+        import tempfile
+        tmp_dir = tempfile.gettempdir()
+        _parser = parser.create_parser()
+        args = _parser.parse_args(['run', 'lite', 'LHC12a11a'])
+        utils.prepare_get_setting_c_file(tmp_dir, args)

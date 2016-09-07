@@ -32,7 +32,9 @@ std::string GetSetting(const std::string settingName) {{
       return "{aliphysics_version}";
     else if (settingName == "ttl")
       return "{ttl}";
-    else 
+    else if (settingName == "max_files_subjob")
+      return "{max_files_subjob}";
+    else
       std::cout << "Invalid setting name: " << settingName << std::endl;
     return "";
   }};
