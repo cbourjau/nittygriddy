@@ -130,7 +130,7 @@
     "LHC16l_muon_calo_pass1": {
 	"datatype": "aod",
 	"system": "pp",
-	"is_mc": "true",
+	"is_mc": "false",
 	"datadir": "/alice/data/2016/LHC16l/",
 	"data_pattern": "muon_calo_pass1/AOD/*/AliAOD.root",
 	"run_number_prefix": "000",
