@@ -119,6 +119,13 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   // Use run number as output folder names
   plugin->SetOutputToRunNo();
   plugin->SetTTL(atoi(GetSetting("ttl").c_str()));
+  
+  // These options might be crucial in order to have the merging jdls properly set up, but who knows...
+  plugin->SetInputFormat("xml-single");
+  // Optionally modify job price (default 1)
+  plugin->SetPrice(1);
+  // Optionally modify split mode (default 'se')
+  plugin->SetSplitMode("se");
   return plugin;
 };
 
