@@ -39,7 +39,8 @@ TChain* makeChain() {
     chain = new TChain ("aodTree");
   }
   if (GetSetting("datatype") == "esd") {
-    chain = new TChain ("aodTree");
+    // chain = new TChain ("esdTree");  // Tree name in AliESDs.root
+    chain = new TChain ("TE");  // Tree name in galice.root files
   }
   TString incollection = "./input_files.dat";
   ifstream file_collect(incollection.Data());
@@ -175,7 +176,7 @@ void run(const std::string gridMode="")
     AliVEventHandler* esdH = new AliESDInputHandler;
     mgr->SetInputEventHandler(esdH);
   }
-  else if (GetSetting("is_mc") == "true" && GetSetting("datatype") == "esd") {
+  if (GetSetting("is_mc") == "true" && GetSetting("datatype") == "esd") {
     AliMCEventHandler* handler = new AliMCEventHandler;
     handler->SetReadTR(kTRUE);
     mgr->SetMCtruthEventHandler(handler);

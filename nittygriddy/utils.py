@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import urllib2
+import zipfile
 
 from nittygriddy import settings
 from nittygriddy.alienTokenError import AlienTokenError
@@ -111,6 +112,12 @@ def download_dataset(dataset, volume):
                     os.path.basename(search_string)]
         run_files = subprocess.check_output(find_cmd).split()
         run_files.sort()
+        # for MC ESDs, we want to download the root_archive.root file
+        # That file contains galice.root, Kinematics*.root, TrackRefs.root, and AliESDs.root
+        # Downloading the zip gets us all those files at ones
+        if ds["datatype"] == "esd" and ds["is_mc"] == "true":
+            run_files = [path.replace(os.path.basename(search_string), "root_archive.zip") for path in run_files]
+            print "Downloading root_archive.zip files!"
 
         for alien_path in run_files:
             # alien_find puts some jibberish; stop at first line without path
@@ -124,6 +131,10 @@ def download_dataset(dataset, volume):
                 if not warned_about_skipped:
                     warned_about_skipped = True
                     print "Some files were present and were not redownloaded"
+            else:
+                # if we downloaded a zip file, unzip it here
+                with zipfile.ZipFile(local_path) as zf:
+                    zf.extractall(os.path.dirname(local_path))
             cum_size = get_size(os.path.join(period_dir, "*", ds["data_pattern"]))
             sys.stdout.write("\rDownloaded {:2f}% of {}GB so far"
                              .format(100 * cum_size / 1e9 / volume, volume))
