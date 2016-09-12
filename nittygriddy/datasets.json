@@ -9,6 +9,16 @@
 	"run_list": "137686, 138534, 138653, 139038, 139437",
 	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 1: 0.00fm - 3.72fm -> 5.02 (0-5%), ID #283"
     },
+    "LHC12a11a_ESD": {
+	"datatype": "esd",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/2012/LHC12a11a",
+	"data_pattern": "*/galice.root",
+	"run_number_prefix": "",
+	"run_list": "137686, 138534, 138653, 139038, 139437",
+	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 1: 0.00fm - 3.72fm -> 5.02 (0-5%), ID #283"
+    },
     "LHC10h_AOD160": {
 	"datatype": "aod",
 	"system": "PbPb",
