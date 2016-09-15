@@ -48,7 +48,10 @@ def run(args):
                                                             ds["datadir"].lstrip("/"),
                                                             "*",
                                                             ds["data_pattern"]))
-            input_files.write('\n'.join(glob(search_string)) + '\n')
+            search_results = glob(search_string)
+            if len(search_results) == 0:
+                raise ValueError("No local files found at {}".format(search_string))
+            input_files.write('\n'.join(search_results) + '\n')
         # command to start the analysis
         cmd = ['root', '-l', '-q', 'run.C']
     else:
