@@ -138,7 +138,7 @@ def download_dataset(dataset, volume):
                 pass
             else:
                 # if we downloaded a zip file, unzip it here
-                if local_path.contains(".zip"):
+                if ".zip" in local_path:
                     with zipfile.ZipFile(local_path) as zf:
                         zf.extractall(os.path.dirname(local_path))
             cum_size = get_size(os.path.join(period_dir, "*", ds["data_pattern"]))
