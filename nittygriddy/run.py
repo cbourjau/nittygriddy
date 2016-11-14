@@ -12,11 +12,12 @@ from nittygriddy import utils, settings
 
 def run(args):
     if not os.path.isfile(os.path.join(os.path.abspath(os.path.curdir), "ConfigureWagon.C")):
-        print "Can only run from a nittygriddy project folder"
-        return
+        raise ValueError("Can only run from a nittygriddy project folder")
     output_dir = os.path.join(os.path.abspath(os.path.curdir), datetime.now().strftime("%Y%m%d_%H%M"))
-    if args.folder_postfix:
-        output_dir += args.folder_postfix
+    if args.suffix:
+        if "-" in args.suffix:
+            raise ValueError('Hyphens ("-") are not allowed in the suffix')
+        output_dir += args.suffix
     try:
         os.mkdir(output_dir)
     except OSError:
@@ -78,7 +79,7 @@ def create_subparsers(subparsers):
     parser_run = subparsers.add_parser('run', description=description_run)
     parser_run.add_argument('runmode', choices=('local', 'lite', 'grid'))
     parser_run.add_argument('dataset', type=str, help="Use this dataset")
-    parser_run.add_argument('--folder_postfix', type=str, help="Attach to the end of the folder name")
+    parser_run.add_argument('--suffix', type=str, help="Attach to the end of the folder name and files uploaded to the grid")
     parser_run.add_argument('--nworkers', type=str, help="Number of workers for proof lite", default="-1")
     parser_run.add_argument('--par_files', type=str, default="",
                             help="Patch aliphysics on the grid with these space separeated par or libXXX.so files. Build par_files before with cd $ALICE_PHYSICS/../build; make MODULE.par; make -j$MJ install")
