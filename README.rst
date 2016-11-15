@@ -37,22 +37,29 @@ Setting up a "project"
 
 What I call "a project" in the following is really nothing more than a folder where you store the settings for a specific analysis. Currently, all the settings are in one single file but more files might be added in the future. Also, note that in order to use nittygriddy **your task must be present in your local aliphysics installation** (which it really should anyways)!
 
-configureWagon.C
+ConfigureWagon.C
 ----------------
-The only ``.C`` file needed. It reflects setting up the options for your task analog to what is done in the lego trains. The shortest possible version, would look something like this: ::
+The only ``.C`` file needed. It reflects setting up the options for your task analog to what is done in the lego trains. Note that this file will be compiled and therefore has to be valid cpp (this the ``#includes`` in the example below). The reason for this is that using the interpreter is just plain evil and will lead to undefined behavior eventually. The shortest possible version, would look something like this:
 
-  void configureWagon() {
-    // Load you AddTask macro
-    gROOT->LoadMacro("$ALICE_PHYSICS/PWGCF/Correlations/macros/c2/AddTaskC2.C");
+.. code-block:: cpp
 
-    // Execute your AddTask macro. You can pass options in the function call if necessary
-    AliAnalysisTaskC2* task =
-      reinterpret_cast< AliAnalysisTaskC2* > (gROOT->ProcessLine("AddTaskC2()"));
-    /*
-      Set your options here, similar to what is done in the lego trains, eg:
-      task->fSettings.fEtaAcceptanceLowEdge = -0.9;
-    */
-  }
+    #include "TROOT.h"
+    #include "AliVEvent.h"
+    #include "AliBasedNdetaTask.h"
+
+    void ConfigureWagon() {
+      // Load you AddTask macro
+      gROOT->LoadMacro("$ALICE_PHYSICS/PWGLF/FORWARD/analysis2/AddTaskdNdeta.C");
+    
+      // Execute your AddTask macro. You can pass options in the function call if necessary
+      AliBasedNdetaTask* task =
+        reinterpret_cast< AliBasedNdetaTask* > (gROOT->ProcessLine("AddTaskdNdeta()"));
+      
+      /*
+        Set your task's options here:
+        task->SelectCollisionCandidates(AliVEvent::kMB);
+      */
+    }
 
 
 ..
@@ -138,7 +145,7 @@ Do you have a valid alien-token? Its on the todo-list to ask for it more gracefu
 
 Migrate to LEGO trains
 ----------------------
-Once your analysis works, you should be able to almost seamlessly use your configureWagon.C content in the LEGO wagon setup. Please use LEGO-trains whenever possible and reasonable to save resources!
+Once your analysis works, you should be able to almost seamlessly use your ``ConfigureWagon.C`` content in the LEGO wagon setup. Please use LEGO-trains whenever possible and reasonable to save resources!
 
 
 Debug your code like a boss (with GDB)
