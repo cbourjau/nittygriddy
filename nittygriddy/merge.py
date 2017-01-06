@@ -73,6 +73,14 @@ def merge(args):
             print "The following files could not be deleted:"
             pprint(left_files)
 
+    if args.mergemode == 'unmerge':
+        workdir = os.path.dirname(os.path.abspath("./run.C")).split("/")[-1]
+        alien_workdir = os.path.join(utils.find_user_grid_dir(), workdir)
+        subprocess.call(['alien_rm', os.path.join(alien_workdir, 'output/*/Stage_*.xml')])
+        subprocess.call(['alien_rm', os.path.join(alien_workdir, 'output/*/AnalysisResults.root')])
+        subprocess.call(['alien_rm', os.path.join(alien_workdir, 'output/*/root_archive.zip')])
+        subprocess.call(['alien_rmdir', os.path.join(alien_workdir, 'output/*/Stage_*')])
+
 
 def create_subparsers(subparsers):
     # Create merge sub-parser
@@ -80,6 +88,8 @@ def create_subparsers(subparsers):
     executed from output folder of that analysis."""
     parser_merge = subparsers.add_parser('merge', description=description_merge)
     parser_merge.add_argument('mergemode',
-                              choices=('online', 'offline', 'download', 'clean'),
-                              help="Merge files online, offline or download the latest merge results. Use `clean` to delete previous merge stages. Use this with care!")
+                              choices=('online', 'offline', 'download', 'clean', 'unmerge'),
+                              help=("Merge files online, offline or download the latest merge results. "
+                                    "Use `clean` to delete previous merge stages. Use this with care! "
+                                    "`unmerge` deletes all merge stages. Don't use this in combination with `clean`."))
     parser_merge.set_defaults(op=merge)
