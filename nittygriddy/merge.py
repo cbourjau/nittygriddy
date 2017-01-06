@@ -45,6 +45,9 @@ def merge(args):
                 utils.download_file(alien_path, local_path)
             except ValueError:
                 print "{} exists and is not redownloaded.".format(local_path)
+            except OSError, e:
+                # If there was an error in the download, just print, but keep going
+                print e.message
 
     if args.mergemode == 'clean':
         workdir = os.path.dirname(os.path.abspath("./run.C")).split("/")[-1]

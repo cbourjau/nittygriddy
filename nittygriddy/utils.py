@@ -70,14 +70,16 @@ def download_file(alien_path, local_path):
                          stderr=subprocess.STDOUT)
     p.wait()
     if p.returncode != 0:
-        try:
-            os.remove(local_path)
-        except OSError:
-            pass  # file probably didn't exist at all
-
         print "\n", p.stdout.read()
-        raise OSError("An error occued while downloading {}; "
-                      "The broken file was deleted.".format(local_path))
+        if ".zip" in alien_path:
+            print "WARNING: there might be an issue with file {}.".format(local_path)
+        else:
+            try:
+                os.remove(local_path)
+            except OSError:
+                pass  # file probably didn't exist at all
+            raise OSError("An error occued while downloading {}; "
+                          "The broken file was deleted.".format(local_path))
 
 
 def download_dataset(dataset, volume):
@@ -140,7 +142,15 @@ def download_dataset(dataset, volume):
                 # if we downloaded a zip file, unzip it here
                 if ".zip" in local_path:
                     with zipfile.ZipFile(local_path) as zf:
-                        zf.extractall(os.path.dirname(local_path))
+                        try:
+                            zf.extractall(os.path.dirname(local_path))
+                        except IOError:
+                            print "Error unzipping {}. File was deleted".format(local_path)
+                            try:
+                                os.remove(local_path)
+                            except OSError:
+                                pass  # file probably didn't exist at all
+
             cum_size = get_size(os.path.join(period_dir, "*", ds["data_pattern"]))
             sys.stdout.write("\rDownloaded {:2f}% of {}GB so far"
                              .format(100 * cum_size / 1e9 / volume, volume))
