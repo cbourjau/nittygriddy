@@ -1,7 +1,12 @@
 #! /usr/bin/python2
 import sys
 
-from nittygriddy import parser
+try:
+    from nittygriddy import parser
+except ImportError, e:
+    print "There was an import error! Was ROOT `source`ed properly?"
+    print e
+    quit()
 
 parser = parser.create_parser()
 args = parser.parse_args()
