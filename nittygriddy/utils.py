@@ -203,7 +203,20 @@ def find_latest_merge_results(alien_workdir):
     finds = subprocess.check_output(cmd).strip().split()
     # alien_find puts some jibberish; stop at first line without path
     finds = [path for path in finds if path.startswith("/")]
-    # find shortest path
+
+    # do we have a result file in output/{run}/AnalysisResults.root?
+    pattern = r".*/output/\d+/AnalysisResults.root"
+    if [f for f in finds if re.match(pattern, f)]:
+        return [f for f in finds if re.match(pattern, f)]
+
+    # Do we have merge stages?
+    pattern = r".*/output/\d+/Stage_(\d+)/\d+/AnalysisResults.root"
+    stages = [int(re.match(pattern, f).group(1)) for f in finds if re.match(pattern, f)]
+    if stages:
+        max_stage = max(stages)
+        pattern = r".*/output/\d+/Stage_{}/\d+/AnalysisResults.root".format(max_stage)
+        return [f for f in finds if re.match(pattern, f)]
+    # find shortest path; last resort
     min_nfolders = min([len(path.split("/")) for path in finds])
     top_level_files = [path for path in finds if len(path.split("/")) == min_nfolders]
     return top_level_files
