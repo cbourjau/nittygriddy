@@ -14,7 +14,7 @@
 	"system": "PbPb",
 	"is_mc": "true",
 	"datadir": "/alice/sim/2012/LHC12a11a",
-	"data_pattern": "*/galice.root",
+	"data_pattern": "*/AliESDs.root",
 	"run_number_prefix": "",
 	"run_list": "137686, 138534, 138653, 139038, 139437",
 	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 1: 0.00fm - 3.72fm -> 5.02 (0-5%), ID #283"
@@ -24,7 +24,7 @@
 	"system": "PbPb",
 	"is_mc": "true",
 	"datadir": "/alice/sim/LHC11a10a_bis",
-	"data_pattern": "*/galice.root",
+	"data_pattern": "*/AliESDs.root",
 	"run_number_prefix": "",
 	"run_list": "139510, 139507, 139505, 139503, 139465, 139438, 139437, 139360, 139329, 139328, 139314, 139310, 139309, 139173, 139107, 139105, 139038, 139037, 139036, 139029, 139028, 138872, 138871, 138870, 138837, 138732, 138730, 138666, 138662, 138653, 138652, 138638, 138624, 138621, 138583, 138582, 138579, 138578, 138469, 138442, 138439, 138438, 138396, 138364, 138275, 138225, 138201, 138197, 138192, 138190, 137848, 137844, 137752, 137751, 137724, 137722, 137718, 137704, 137693, 137692, 137691, 137686, 137685, 137639, 137638, 137608, 137595, 137549, 137544, 137541, 137539, 137443, 137441, 137440, 137439, 137434, 137432, 137431, 137430, 137366, 137243, 137236, 137235, 137232, 137231, 137230, 137162, 137161, 137135",
 	"notes": "Hijing standalone, LHC10h anchors, 2760GeV (repeat of LHC11a10a), ID #254"
@@ -162,7 +162,7 @@
 	"system": "pp",
 	"is_mc": "true",
 	"datadir": "/alice/sim/2015/LHC15g3a3/",
-	"data_pattern": "*/galice.root",
+	"data_pattern": "*/AliESDs.root",
 	"run_number_prefix": "",
 	"run_list": "225000, 225011, 225016, 225026, 225031, 225035, 225037, 225041, 225043, 225050, 225051, 225052, 225106, 225305, 225307, 225309, 225310, 225313, 225314, 225315, 225322, 225576, 225578, 225579, 225580, 225582, 225586, 225587, 225705, 225707, 225708, 225709, 225710, 225716, 225717, 225719, 225753, 225757, 225762, 225763, 225766, 225768, 226062, 226170, 226220, 226225, 226444, 226445, 226452, 226466, 226468, 226472, 226476, 226483, 226495, 226500",
 	"notes": "pp 13 TeV, again PYTHIA8 Monash-2013, LHC15f anchors, ALIROOT-6232"
@@ -182,7 +182,7 @@
 	"system": "PbPb",
 	"is_mc": "true",
 	"datadir": "/alice/sim/2016/LHC16d2/",
-	"data_pattern": "0*/galice.root",
+	"data_pattern": "0*/AliESDs.root",
 	"run_number_prefix": "",
 	"run_list": "245064",
 	"notes": "5.02 TeV, EPOS-LHC MB simulation, 245064 (LHC15o) anchor, ALIROOT-6632"
@@ -192,7 +192,7 @@
 	"system": "PbPb",
 	"is_mc": "true",
 	"datadir": " /alice/sim/2016/LHC16i5b/",
-	"data_pattern": "*/galice.root",
+	"data_pattern": "*/AliESDs.root",
 	"run_number_prefix": "",
 	"run_list": "245064",
 	"notes": "5.02 TeV, test production for AMPT with sting melting, semi-central events, LHC15o anchors, ALIROOT-9000"

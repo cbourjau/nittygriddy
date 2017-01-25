@@ -39,8 +39,8 @@ TChain* makeChain() {
     chain = new TChain ("aodTree");
   }
   if (GetSetting("datatype") == "esd") {
-    // chain = new TChain ("esdTree");  // Tree name in AliESDs.root
-    chain = new TChain ("TE");  // Tree name in galice.root files
+    chain = new TChain ("esdTree");  // Tree name in AliESDs.root
+    // chain = new TChain ("TE");  // Tree name in galice.root files
   }
   TString incollection = "./input_files.dat";
   ifstream file_collect(incollection.Data());
