@@ -1,4 +1,14 @@
 {
+    "LHC10g2c_esd": {
+	"datatype": "esd",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/LHC10g2c",
+	"data_pattern": "*/AliESDs.root",
+	"run_number_prefix": "",
+	"run_list": "130844",
+	"notes": "Hijing, 0.5T, 2760GeV, -7% material budget, Min.bias, reduced multiplicity, ID #219"
+    },
     "LHC12a11a": {
 	"datatype": "aod",
 	"system": "PbPb",
@@ -7,7 +17,57 @@
 	"data_pattern": "AOD157/*/AliAOD.root",
 	"run_number_prefix": "",
 	"run_list": "137686, 138534, 138653, 139038, 139437",
-	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 1: 0.00fm - 3.72fm -> 5.02 (0-5%), ID #283"
+	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 1: 0.00fm - 3.72fm -> 5.02 (0-5%), ID #283; 100k events"
+    },
+    "LHC12a11b": {
+	"datatype": "aod",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/2012/LHC12a11b",
+	"data_pattern": "AOD157/*/AliAOD.root",
+	"run_number_prefix": "",
+	"run_list": "137686, 138534, 138653, 139038, 139437",
+	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 2: 3.72fm - 5.23fm -> 4.99 (5-10%), ID #283; 100k events"
+    },
+    "LHC12a11c": {
+	"datatype": "aod",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/2012/LHC12a11c",
+	"data_pattern": "AOD157/*/AliAOD.root",
+	"run_number_prefix": "",
+	"run_list": "137686, 138534, 138653, 139038, 139437",
+	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 3: 5.23fm - 7.31fm -> 9.98 (10-20%), ID #283; 100k events"
+    },
+    "LHC12a11d": {
+	"datatype": "aod",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/2012/LHC12a11d",
+	"data_pattern": "AOD157/*/AliAOD.root",
+	"run_number_prefix": "",
+	"run_list": "137686, 138534, 138653, 139038, 139437",
+	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 4: 7.31fm - 8.88fm -> 10.00 (20-30%), ID #283; 100k events"
+    },
+    "LHC12a11e": {
+	"datatype": "aod",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/2012/LHC12a11e",
+	"data_pattern": "AOD157/*/AliAOD.root",
+	"run_number_prefix": "",
+	"run_list": "137686, 138534, 138653, 139038, 139437",
+	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 5: 8.88fm - 10.20fm -> 9.98 (30-40%), ID #283; 100k events"
+    },
+    "LHC12a11f": {
+	"datatype": "aod",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/2012/LHC12a11f",
+	"data_pattern": "AOD157/*/AliAOD.root",
+	"run_number_prefix": "",
+	"run_list": "137686, 138534, 138653, 139038, 139437",
+	"notes": "AMPT, LHC10h anchors, 2760GeV, Centrality Class 6: 10.20fm - 11.38fm -> 9.98 (40-50%), ID #283; 100k events"
     },
     "LHC12a11a_ESD": {
 	"datatype": "esd",
@@ -58,6 +118,16 @@
 	"run_number_prefix": "",
 	"run_list": "139510, 139507, 139505, 139503, 139465, 139438, 139437, 139360, 139329, 139328, 139314, 139310, 139309, 139173, 139107, 139105, 139038, 139037, 139036, 139029, 139028, 138872, 138871, 138870, 138837, 138732, 138730, 138666, 138662, 138653, 138652, 138638, 138624, 138621, 138583, 138582, 138579, 138578, 138469, 138442, 138439, 138438, 138396, 138364, 138275, 138225, 138201, 138197, 138192, 138190, 137848, 137844, 137752, 137751, 137724, 137722, 137718, 137704, 137693, 137692, 137691, 137686, 137685, 137639, 137638, 137608, 137595, 137549, 137544, 137541, 137539, 137443, 137441, 137440, 137439, 137434, 137432, 137431, 137430, 137366, 137243, 137236, 137235, 137232, 137231, 137230, 137162, 137161, 137135",
 	"notes": "Hijing_PbPb_LHC10h in CF_PbPb_MC_AOD"
+    },
+    "LHC14b8a": {
+	"datatype": "aod",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/2014/LHC14b8a",
+	"data_pattern": "*/AliAOD.root",
+	"run_number_prefix": "",
+	"run_list": "139510, 139507, 139505, 139503, 139465, 139438, 139437, 139360, 139329, 139328, 139314, 139310, 139309, 139173, 139107, 139105, 139038, 139037, 139036, 139029, 139028, 138872, 138871, 138870, 138837, 138732, 138730, 138662, 138653, 138652, 138638, 138624, 138621, 138583, 138582, 138579, 138578, 138534, 138469, 138442, 138439, 138438, 138396, 138364, 138275, 138225, 138201, 138197, 138192, 138190, 137848, 137844, 137752, 137751, 137724, 137722, 137718, 137704, 137693, 137692, 137691, 137686, 137685, 137639, 137638, 137608, 137595, 137549, 137544, 137541, 137539, 137531, 137530, 137443, 137441, 137440, 137439, 137434, 137432, 137431, 137366, 137243, 137236, 137235, 137232, 137231, 137162, 137161",
+	"notes": "2.76GeV, Full MC flow production:0-5%, LHC10h anchors, including forward detectors, ALIROOT-5338, AliGenTunedOnPbPb"
     },
     "LHC15f_AOD171": {
 	"datatype": "aod",
@@ -216,5 +286,15 @@
 	"run_number_prefix": "000",
 	"run_list": "244918, 244980, 246391, 244982, 245064, 246392",
 	"notes": "7 TeV, Good runs with FMD, ITS, TPC, and V0"
+    },
+    "LHC16i5b": {
+	"datatype": "aod",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/2016/LHC16i5b/",
+	"data_pattern": "AOD/*/AliAOD.root",
+	"run_number_prefix": "",
+	"run_list": "245064",
+	"notes": "5020 GeV, test production for AMPT with sting melting, semi-central events, LHC15o anchors, ALIROOT-9000, 20768 events; trigger-string is name 'MB', AliVEvent::kINT7 not set"
     }
 }
