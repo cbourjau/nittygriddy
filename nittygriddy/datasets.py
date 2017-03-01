@@ -1,16 +1,26 @@
-from pprint import pprint
+import json
+
+from pygments import highlight
+from pygments.lexers import JsonLexer
+from pygments.formatters import TerminalFormatter
 
 from nittygriddy import utils
 
 
+def _pprint_json(dics):
+    json_str = json.dumps(dics, sort_keys=True, indent=4)
+    print highlight(unicode(json_str, 'UTF-8'),
+                    JsonLexer(), TerminalFormatter())
+
+
 def datasets(args):
     if args.list:
-        pprint(utils.get_datasets())
+        _pprint_json(utils.get_datasets())
     elif args.show:
         ds = utils.get_datasets().get(args.show, None)
         if not ds:
             raise ValueError("Dataset not found.")
-        pprint(ds)
+        _pprint_json(ds)
     elif args.search:
         search_datasets_for_string(args.search)
     elif args.download:
@@ -31,11 +41,12 @@ def search_datasets_for_string(s):
             else:
                 yield key, value
     datasets = utils.get_datasets()
+    matches = []
     for dset_name, dset in datasets.iteritems():
         for key, value in flatten(dset):
             if s in value:
-                pprint({dset_name: dset})
-                print ""
+                matches.append({dset_name: dset})
+    _pprint_json(matches)
 
 
 def create_subparser(subparsers):

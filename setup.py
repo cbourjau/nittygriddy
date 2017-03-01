@@ -1,16 +1,19 @@
 from setuptools import setup
 from glob import glob
 
-install_requires = ['pytz']
+install_requires = ['pytz', 'pygments']
 tests_require = ['nose']
 
 setup(
     name='nittygriddy',
-    version='0.0.1',
-    description="Convinient way deploy your ALICE analysis locally (sequential and proof lite) or on the grid",
+    version='0.9.1',
+    description="Convinient way to deploy your ALICE analysis locally (sequential and proof lite) or on the grid",
     author='Christian Bourjau',
     author_email='christian.bourjau@cern.ch',
     packages=['nittygriddy', 'nittygriddy.tests'],
+    package_data={
+        'nittygriddy': ['datasets.json', 'run.C', 'GetSetting.C'],
+    },
     long_description=open('README.rst').read(),
     url='https://github.com/cbourjau/nittygriddy',
     keywords=['alice', 'cern', 'grid', 'proof'],
@@ -23,7 +26,7 @@ setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering :: Physics",
-        "Development Status :: 2 - Beta",
+        "Development Status :: 4 - Beta",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     install_requires=install_requires,
