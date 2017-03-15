@@ -345,12 +345,18 @@ def yn_choice(message, default='y'):
 def prepare_get_setting_c_file(output_dir, args):
     ds = get_datasets()[args.dataset]
     with open(os.path.join(output_dir, "GetSetting.C"), "w") as get_setting_c:
+        if args.run_list:
+            # the grid plugin expects the runs to be separeated by ", "; not the space!
+            runs = [run.strip() for run in args.run_list.split(",")]
+            runs_str = ", ".join(runs)
+        else:
+            runs_str = ds['run_list']
         as_string = get_template_GetSetting().\
             format(workdir=os.path.split(output_dir)[1],
                    datadir=ds['datadir'],
                    data_pattern=ds['data_pattern'],
                    run_number_prefix=ds['run_number_prefix'],
-                   run_list=args.run_list if args.run_list else ds['run_list'],
+                   run_list=runs_str,
                    is_mc=ds["is_mc"],
                    datatype=ds["datatype"],
                    runmode=args.runmode,
