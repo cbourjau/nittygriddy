@@ -28,7 +28,15 @@ def datasets(args):
             raise ValueError("No download volume specified")
         elif not utils.get_datasets().get(args.download, False):
             raise ValueError("Dataset not found.")
-        utils.download_dataset(args.download, args.volume)
+        elif args.run_list:
+            # is the given run list a subset of the full run list?
+            user_run_list = [int(r.strip()) for r in args.run_list.split(",")]
+            full_run_list = [int(r.strip()) for r in
+                             utils.get_datasets().get(args.download)['run_list'].split(",")]
+            if not set(user_run_list).issubset(full_run_list):
+                raise ValueError("Run {} list is not a subset of this periods run list ({})!"
+                                 .format(user_run_list, full_run_list))
+        utils.download_dataset(args.download, args.volume, args.run_list)
 
 
 def search_datasets_for_string(s):
@@ -67,4 +75,8 @@ def create_subparser(subparsers):
     parser_datasets.add_argument(
         '--volume',
         help="Use with --download; Download this many GB", type=float)
+    parser_datasets.add_argument(
+        '--run_list',
+        help="Optional; use with --download; comma separeated string", type=str)
+
     parser_datasets.set_defaults(op=datasets)

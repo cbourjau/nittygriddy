@@ -82,7 +82,7 @@ def download_file(alien_path, local_path):
                           "The broken file was deleted.".format(local_path))
 
 
-def download_dataset(dataset, volume):
+def download_dataset(dataset, volume, runs=None):
     """
     Download files from the given dataset until the target volume is met
     Parameters
@@ -91,6 +91,8 @@ def download_dataset(dataset, volume):
         Name of the dataset
     volume : int, float
         Download files until the total volume is this number in GB
+    runs : str
+        Optional; Comma separeated list of runs which should be downloaded.
     """
     ds = get_datasets()[dataset]
     # check if the root datadir exists
@@ -101,12 +103,15 @@ def download_dataset(dataset, volume):
     except OSError:
         pass
     warned_about_skipped = False
-    for run in ds["run_list"].split(","):
-        run = run.strip()  # get rid of spaces around the number
-        try:
-            int(run)
-        except ValueError:
-            raise ValueError("Malformated run number. Check run list!")
+    try:
+        if runs:
+            runs = [int(r.strip()) for r in runs.split(",")]
+        else:
+            runs = [int(r.strip()) for r in ds["run_list"].split(",")]
+    except ValueError:
+        raise ValueError("Malformated run number. Check run list!")
+
+    for run in runs:
         search_string = os.path.join(ds["datadir"],
                                      ds["run_number_prefix"] + str(run),
                                      ds["data_pattern"])
@@ -119,7 +124,8 @@ def download_dataset(dataset, volume):
         # That file contains galice.root, Kinematics*.root, TrackRefs.root, and AliESDs.root
         # Downloading the zip gets us all those files at ones
         if ds["datatype"] == "esd" and ds["is_mc"] == "true":
-            run_files = [path.replace(os.path.basename(search_string), "root_archive.zip") for path in run_files]
+            run_files = [path.replace(os.path.basename(search_string), "root_archive.zip")
+                         for path in run_files]
             print "Downloading root_archive.zip files!"
 
         for alien_path in run_files:

@@ -45,14 +45,24 @@ def run(args):
     if args.runmode != "grid":
         # create list of local files
         with open(os.path.join(output_dir, "input_files.dat"), 'a') as input_files:
-            search_string = os.path.expanduser(os.path.join(settings["local_data_dir"],
-                                                            ds["datadir"].lstrip("/"),
-                                                            "*",
-                                                            ds["data_pattern"]))
+            search_string = os.path.join(settings["local_data_dir"],
+                                         ds["datadir"].lstrip("/"),
+                                         "*",
+                                         ds["data_pattern"])
+            search_string = os.path.expanduser(search_string)
             search_results = glob(search_string)
-            if len(search_results) == 0:
-                raise ValueError("No local files found at {}".format(search_string))
-            input_files.write('\n'.join(search_results) + '\n')
+            # Filter the found files to match the given run list
+            if args.run_list:
+                run_list = [r.strip() for r in args.run_list.split(",")]
+            else:
+                run_list = [r.strip() for r in ds["run_list"].split(",")]
+            filtered_results = []
+            for path in search_results:
+                if any([r for r in run_list if r in path]):
+                    filtered_results.append(path)
+            if len(filtered_results) == 0:
+                raise ValueError("No local files found at {} matching run list".format(search_string))
+            input_files.write('\n'.join(filtered_results) + '\n')
         # command to start the analysis
         cmd = ['root', '-l', '-q', 'run.C']
     else:
@@ -84,7 +94,7 @@ def create_subparsers(subparsers):
     parser_run.add_argument('--par_files', type=str, default="",
                             help="Patch aliphysics on the grid with these space separeated par or libXXX.so files. Build par_files before with cd $ALICE_PHYSICS/../build; make MODULE.par; make -j$MJ install")
     parser_run.add_argument('--run_list', type=str,
-                            help="Overwrite default (comma seperated) run list for the given dataset (grid only)")
+                            help="Overwrite default (comma seperated) run list for the given dataset")
     parser_run.add_argument('--ttl', type=str, help="Number of seconds this job should live", default="30000")
     parser_run.add_argument('--max_files_subjob', type=str, help="Maximum number of files per subjob", default="50")
     parser_run.add_argument('--wait_for_gdb', action='store_true', default=False,
