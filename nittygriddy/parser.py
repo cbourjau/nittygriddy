@@ -3,7 +3,7 @@ Create the command line parser
 """
 
 import argparse
-from nittygriddy import run, merge, datasets
+from nittygriddy import run, merge, datasets, new
 
 
 def create_parser():
@@ -23,4 +23,5 @@ def create_parser():
     run.create_subparsers(subparsers)
     merge.create_subparsers(subparsers)
     datasets.create_subparser(subparsers)
+    new.create_subparsers(subparsers)
     return parser
