@@ -371,5 +371,6 @@ def prepare_get_setting_c_file(output_dir, args):
                    aliphysics_version=get_latest_aliphysics() if args.runmode == "grid" else "",
                    par_files=args.par_files if args.par_files else "",
                    ttl=args.ttl,
-                   max_files_subjob=args.max_files_subjob)
+                   max_files_subjob=args.max_files_subjob,
+                   use_train_conf="true" if args.use_train_conf else "false")
         get_setting_c.write(as_string)
