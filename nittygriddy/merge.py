@@ -1,6 +1,5 @@
 import os
 from pprint import pprint
-import ctypes
 
 import subprocess
 
@@ -22,7 +21,7 @@ def merge(args):
         quit()
 
     ROOT.gROOT.LoadMacro(r'GetSetting.C')
-    if ctypes.c_char_p(ROOT.gROOT.ProcessLine(r'GetSetting("runmode").c_str()')).value != "grid":
+    if ROOT.GetSetting("runmode") != "grid":
         raise ValueError("The data in this folder was not run on the grid!")
 
     # root does not like it if the stdout is piped and it uses some shell functionality
