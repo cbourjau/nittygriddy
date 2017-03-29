@@ -128,13 +128,6 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   // Optionally modify split mode (default 'se')
   plugin->SetSplitMode("se");
 
-   /// Add task using train configuration
-    if (GetSetting("use_train_conf") == "true") {
-      TObjArray *arr = AliAnalysisTaskCfg::ExtractModulesFrom("MLTrainDefinition.cfg");
-      plugin->AddModules(arr);
-      plugin->LoadModules();
-    }
-
   return plugin;
 };
 
@@ -158,7 +151,8 @@ void run(const std::string gridMode="")
   else if (GetSetting("runmode") == "grid")
     runmode = kGRID;
   else {
-    std::cout << "Invalid analysis mode: " << GetSetting("runmode") << "! I have no idea whats going on..." << std::endl;
+    std::cout << "Invalid analysis mode: " << GetSetting("runmode")
+	      << "! I have no idea whats going on..." << std::endl;
     assert(0);
   }
   // start proof if necessary
@@ -204,8 +198,17 @@ void run(const std::string gridMode="")
     mgr->SetGridHandler(alienHandler);
   }
 
-  // Add tasks
-  if (GetSetting("use_train_conf") != "true") {
+  // Add tasks; either from MLTrainDefinition.cfg or ConfigureWagon.C
+  if (GetSetting("use_train_conf") == "true") {
+    std::cout << "Loading analysis tasks from MLTrainDefinition.cfg file" << std::endl;
+    TObjArray *arr = AliAnalysisTaskCfg::ExtractModulesFrom("MLTrainDefinition.cfg");
+    TIter next(arr);
+    AliAnalysisTaskCfg *module;
+    while ((module = (AliAnalysisTaskCfg*)next())) {
+      module->ExecuteMacro();
+    }
+  } else {
+    std::cout << "Loading analysis tasks from ConfigureWagon.C file" << std::endl;
     gROOT->LoadMacro("./ConfigureWagon.C+");
     gROOT->ProcessLine("ConfigureWagon()");
   }
