@@ -372,5 +372,36 @@ def prepare_get_setting_c_file(output_dir, args):
                    par_files=args.par_files if args.par_files else "",
                    ttl=args.ttl,
                    max_files_subjob=args.max_files_subjob,
-                   use_train_conf="true" if args.use_train_conf else "false")
+                   use_train_conf="true" if project_uses_train_cfg() else "false")
         get_setting_c.write(as_string)
+
+
+def is_valid_project_dir():
+    """
+    Check if the current directory is a valid "project" directory.
+
+    Raises
+    ------
+    ValueError:
+        If the current directory does not meet the standards
+    """
+    cur_dir = os.path.abspath(os.path.curdir)
+    wagon_conf_file = os.path.isfile(os.path.join(cur_dir, "ConfigureWagon.C"))
+    train_conf = os.path.isfile(os.path.join(cur_dir, "MLTrainDefinition.cfg"))
+
+    # Project dir has either an ConfigureWagon.C or a
+    # MLTrainDefinition.cfg file, but not both
+    if not (wagon_conf_file or train_conf) and (wagon_conf_file ^ train_conf):
+        raise ValueError("Can only run from a nittygriddy project folder! "
+                         "A project folder has either an `ConfigureWagon.C` or a "
+                         "`MLTrainDefinition.cfg` file, but not both.")
+
+
+def project_uses_ConfigureWagon():
+    cur_dir = os.path.abspath(os.path.curdir)
+    return os.path.isfile(os.path.join(cur_dir, "ConfigureWagon.C"))
+
+
+def project_uses_train_cfg():
+    cur_dir = os.path.abspath(os.path.curdir)
+    return os.path.isfile(os.path.join(cur_dir, "MLTrainDefinition.cfg"))
