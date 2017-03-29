@@ -11,7 +11,8 @@ from nittygriddy import utils
 
 def merge(args):
     # check if we are in a output dirname
-    if not (os.path.isfile("./ConfigureWagon.C") and
+    if not ((os.path.isfile("./ConfigureWagon.C") or
+             os.path.isfile("./MLTrainDefinition.cfg")) and
             os.path.isfile("./GetSetting.C") and
             os.path.isfile("./run.C")):
         raise ValueError("This command needs to be run from an output directory")

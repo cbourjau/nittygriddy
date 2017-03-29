@@ -19,6 +19,7 @@
 #include "TString.h"
 
 #include "AliAnalysisManager.h"
+#include "AliAnalysisTaskCfg.h"
 #include "AliMCEventHandler.h"
 #include "AliESDInputHandler.h"
 #include "AliAODInputHandler.h"
@@ -126,6 +127,14 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   plugin->SetPrice(1);
   // Optionally modify split mode (default 'se')
   plugin->SetSplitMode("se");
+
+   /// Add task using train configuration
+    if (GetSetting("use_train_conf") == "true") {
+      TObjArray *arr = AliAnalysisTaskCfg::ExtractModulesFrom("MLTrainDefinition.cfg");
+      plugin->AddModules(arr);
+      plugin->LoadModules();
+    }
+
   return plugin;
 };
 
@@ -196,8 +205,10 @@ void run(const std::string gridMode="")
   }
 
   // Add tasks
-  gROOT->LoadMacro("./ConfigureWagon.C+");
-  gROOT->ProcessLine("ConfigureWagon()");
+  if (GetSetting("use_train_conf") != "true") {
+    gROOT->LoadMacro("./ConfigureWagon.C+");
+    gROOT->ProcessLine("ConfigureWagon()");
+  }
 
   if (!mgr->InitAnalysis()) return;
   mgr->PrintStatus();
