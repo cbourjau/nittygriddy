@@ -36,7 +36,7 @@ std::string GetSetting(const std::string settingName) {{
       return "{max_files_subjob}";
     else if (settingName == "use_train_conf")
       return "{use_train_conf}";
-    else if (settingName == "")
+    else
       std::cout << "Invalid setting name: " << settingName << std::endl;
     return "";
   }};
