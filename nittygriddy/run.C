@@ -206,6 +206,7 @@ void run(const std::string gridMode="")
     AliAnalysisTaskCfg *module;
     while ((module = (AliAnalysisTaskCfg*)next())) {
       module->ExecuteMacro();
+      module->ExecuteConfigMacro();
     }
   } else {
     std::cout << "Loading analysis tasks from ConfigureWagon.C file" << std::endl;
