@@ -9,12 +9,13 @@ import subprocess
 
 from nittygriddy import utils, settings
 
+def _prepare_output_dir(args):
+    """
+    Prepare the output dir for the current job
 
-def run(args):
-    wagon_conf_file = os.path.isfile(os.path.join(os.path.abspath(os.path.curdir), "ConfigureWagon.C"))
-    args.use_train_conf = os.path.isfile(os.path.join(os.path.abspath(os.path.curdir), "MLTrainDefinition.cfg"))
-    if not wagon_conf_file and not args.use_train_conf:
-        raise ValueError("Can only run from a nittygriddy project folder")
+    Returns
+    str : Absolut path to the output directory
+    """
     output_dir = os.path.join(os.path.abspath(os.path.curdir), datetime.now().strftime("%Y%m%d_%H%M"))
     if args.suffix:
         if "-" in args.suffix:
@@ -34,20 +35,29 @@ def run(args):
         else:
             raise e
     utils.copy_template_files_to(output_dir)
-    if wagon_conf_file:
+
+    if utils.project_uses_ConfigureWagon():
         shutil.copy(os.path.join(os.path.dirname(output_dir), "ConfigureWagon.C"), output_dir)
-    if args.use_train_conf:
+    if utils.project_uses_train_cfg():
         shutil.copy(os.path.join(os.path.dirname(output_dir), "MLTrainDefinition.cfg"), output_dir)
     if args.par_files:
         utils.prepare_par_files(args.par_files, output_dir)
 
-    # generate input file
-    ds = utils.get_datasets()[args.dataset]
     # create GetSetting.C in output dir (from template)
     utils.prepare_get_setting_c_file(output_dir, args)
+
+    return output_dir
+
+
+def run(args):
+    utils.is_valid_project_dir()
+    output_dir = _prepare_output_dir(args)
+
     # start the analysis
     os.chdir(output_dir)
     if args.runmode != "grid":
+        # generate input file
+        ds = utils.get_datasets()[args.dataset]
         # create list of local files
         with open(os.path.join(output_dir, "input_files.dat"), 'a') as input_files:
             search_string = os.path.join(settings["local_data_dir"],
