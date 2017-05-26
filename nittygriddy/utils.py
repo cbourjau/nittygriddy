@@ -8,8 +8,13 @@ import sys
 import urllib2
 import zipfile
 
+import ROOT
+from rootpy.io import root_open
+
 from nittygriddy import settings
 from nittygriddy.alienTokenError import AlienTokenError
+
+GRID_CONNECTION = None
 
 
 def get_datasets():
@@ -48,38 +53,105 @@ def get_size(search_string):
     return total_size
 
 
-def download_file(alien_path, local_path):
+def download_file(alien_src, local_dest):
     """
-    Download the file `alien` to `local`
+    Download file `alien_src` to `local_path`.
 
     Parameters
     ----------
     alien_path, local_path : string
         Full path to files
+
+    Returns
+    -------
+    int : File size in bytes
     """
-    if os.path.isfile(local_path):
-        raise ValueError("Local file exists")
+    check_alien_token()
     try:
-        os.makedirs(os.path.dirname(local_path))
+        os.makedirs(os.path.dirname(local_dest))
     except OSError:
         pass
-    alien_path = "alien:/" + alien_path
-    cp_cmd = ['alien_cp', '-m', '-s', alien_path, local_path]
-    p = subprocess.Popen(cp_cmd,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT)
-    p.wait()
-    if p.returncode != 0:
-        print "\n", p.stdout.read()
-        if ".zip" in alien_path:
-            print "WARNING: there might be an issue with file {}.".format(local_path)
-        else:
+    # fix the dest to include the file name
+    if not os.path.basename(local_dest):
+        local_dest = os.path.join(local_dest, os.path.basename(alien_src))
+
+    with root_open("alien://" + alien_src) as f:
+        if not f.Cp(local_dest):
             try:
-                os.remove(local_path)
+                os.remove(local_dest)
             except OSError:
                 pass  # file probably didn't exist at all
             raise OSError("An error occued while downloading {}; "
-                          "The broken file was deleted.".format(local_path))
+                          "The broken file was deleted.".format(local_dest))
+        return f.GetSize()
+
+
+def find_associated_archive_files(datadir, run_number_prefix, runs, data_pattern):
+    check_alien_token()
+    urls = []
+    for run in runs:
+        # Create a search string for this run; make sure its a string not u""
+        search_string = str(os.path.join(datadir,
+                                         run_number_prefix + str(run),
+                                         os.path.dirname(data_pattern)))
+        # search for the respective archives depending on the required file name
+        if "AliESDs.root" in data_pattern:
+            archive_name = "root_archive.zip"
+        if "AliAOD.root" in data_pattern:
+            archive_name = "root_archive.zip"  # "aod_archive.zip"
+        finds = ROOT.TAliEnFind(search_string, archive_name)
+        # Get file turns the URL into a string. Talk about indirection...
+        urls += [el.GetFirstUrl().GetFile() for el in finds.GetCollection().GetList()]
+    return urls
+
+
+def download_from_grid_archive(alien_src, local_dest):
+    """
+    Download the files from a grid-zip-file at `alien_src` to `local_path`.
+    If all files from the archive already exist locally, do not re-download them.
+
+    Parameters
+    ----------
+    alien_path, local_path : string
+        Full path to files
+
+    Returns
+    -------
+    int : File size in bytes
+    """
+    check_alien_token()
+    try:
+        os.makedirs(os.path.dirname(local_dest))
+    except OSError:
+        pass
+
+    # fix the dest to include the file name
+    if not os.path.basename(local_dest):
+        local_dest = os.path.join(local_dest, os.path.basename(alien_src))
+
+    with root_open("alien://" + alien_src) as f:
+        if not f.IsArchive():
+            raise ValueError("{} does not point to an archive file.".format(alien_src))
+        fsize = f.GetSize()
+        fnames = [m.GetName() for m in f.GetArchive().GetMembers()]
+        local_dir = os.path.dirname(local_dest)
+        if all([os.path.isfile(os.path.join(local_dir, fname)) for fname in fnames]):
+            raise OSError("Files exist; not redownloading")
+
+        if not f.Cp(local_dest):
+            raise RuntimeError("Could not download {}!".format(alien_src))
+
+    with zipfile.ZipFile(local_dest) as zf:
+        try:
+            zf.extractall(os.path.dirname(local_dest))
+        except IOError:
+            print "Error unzipping {}. File was deleted".format(local_dest)
+    # Delete the zip archive file
+    try:
+        os.remove(local_dest)
+    except OSError:
+        pass  # file probably didn't exist at all?!
+    return fsize
 
 
 def download_dataset(dataset, volume, runs=None):
@@ -111,58 +183,29 @@ def download_dataset(dataset, volume, runs=None):
     except ValueError:
         raise ValueError("Malformated run number. Check run list!")
 
-    for run in runs:
-        search_string = os.path.join(ds["datadir"],
-                                     ds["run_number_prefix"] + str(run),
-                                     ds["data_pattern"])
-        find_cmd = ['alien_find',
-                    os.path.dirname(search_string),
-                    os.path.basename(search_string)]
-        run_files = subprocess.check_output(find_cmd).split()
-        run_files.sort()
-        # for MC ESDs, we want to download the root_archive.root file
-        # That file contains galice.root, Kinematics*.root, TrackRefs.root, and AliESDs.root
-        # Downloading the zip gets us all those files at ones
-        if ds["datatype"] == "esd" and ds["is_mc"] == "true":
-            run_files = [path.replace(os.path.basename(search_string), "root_archive.zip")
-                         for path in run_files]
-            print "Downloading root_archive.zip files!"
+    urls = find_associated_archive_files(ds["datadir"],
+                                         ds["run_number_prefix"],
+                                         runs,
+                                         ds["data_pattern"])
+    cum_size = 0
+    for url in urls:
+        local_path = os.path.join(local_data_dir, url.lstrip('/'))
+        try:
+            cum_size += download_from_grid_archive(url, local_path)
+        except OSError:
+            if not warned_about_skipped:
+                warned_about_skipped = True
+                print "Some files were present and were not redownloaded"
+        except RuntimeError as e:
+            # Error in download; probably with MD5 sum
+            print e.message
+            pass
 
-        for alien_path in run_files:
-            # alien_find puts some jibberish; stop at first line without path
-            if not alien_path.startswith("/"):
-                break
-            # paths to file
-            local_path = os.path.join(local_data_dir, alien_path.lstrip('/'))
-            try:
-                download_file(alien_path, local_path)
-            except ValueError:
-                if not warned_about_skipped:
-                    warned_about_skipped = True
-                    print "Some files were present and were not redownloaded"
-            except OSError as e:
-                # Error in download; probably with MD5 sum
-                print e.message
-                pass
-            else:
-                # if we downloaded a zip file, unzip it here
-                if ".zip" in local_path:
-                    with zipfile.ZipFile(local_path) as zf:
-                        try:
-                            zf.extractall(os.path.dirname(local_path))
-                        except IOError:
-                            print "Error unzipping {}. File was deleted".format(local_path)
-                            try:
-                                os.remove(local_path)
-                            except OSError:
-                                pass  # file probably didn't exist at all
-
-            cum_size = get_size(os.path.join(period_dir, "*", ds["data_pattern"]))
-            sys.stdout.write("\rDownloaded {:2f}% of {}GB so far"
-                             .format(100 * cum_size / 1e9 / volume, volume))
-            sys.stdout.flush()
-            if (cum_size / 1e9) > volume:
-                return
+        sys.stdout.write("\rDownloaded {:2f}% of {}GB so far"
+                         .format(100 * cum_size / 1e9 / volume, volume))
+        sys.stdout.flush()
+        if (cum_size / 1e9) > volume:
+            return
 
 
 def get_latest_aliphysics():
@@ -237,6 +280,12 @@ def check_alien_token():
     AlienTokenError :
         If there was an error checking the token or if the existing token is invalid
     """
+    # Tell python that GRID_CONNECTION is a global variable which we might write to
+    global GRID_CONNECTION
+    if GRID_CONNECTION is None:
+        GRID_CONNECTION = ROOT.TGrid.Connect("alien")
+    if not GRID_CONNECTION.IsConnected():
+        raise AlienTokenError("No grid connection. Call `alien-token-init` before running nittygriddy.")
     cmd = ['alien-token-info']
     try:
         output = subprocess.check_output(cmd)
@@ -245,7 +294,7 @@ def check_alien_token():
     for l in output.splitlines():
         if "Token is still valid!" in l:
             return True
-    return AlienTokenError("Alien token is invalid. Call `alien-token-init` before running nittygriddy.")
+    raise AlienTokenError("Alien token is invalid. Call `alien-token-init` before running nittygriddy.")
 
 
 def prepare_par_files(par_files, output_dir):
@@ -285,7 +334,8 @@ def find_user_grid_dir():
         Absolute path to user's home directory
     """
     check_alien_token()
-    user_name = subprocess.check_output(['alien_whoami']).strip()
+    user_name = ROOT.TGrid.Connect("alien").GetUser()
+    # user_name = subprocess.check_output(['alien_whoami']).strip()
     alien_home = "/alice/cern.ch/user/{}/{}/".format(user_name[0], user_name)
     return alien_home
 

@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from unittest import TestCase, skip
 import subprocess
@@ -21,9 +22,38 @@ class Test_downloader(TestCase):
     def test_invalid_dataset(self):
         self.assertRaises(KeyError, utils.download_dataset, "invalid_dataset", 5)
 
-    @skip("Skip download test")
+    def test_download_one_file(self):
+        try:
+            shutil.rmtree("/tmp/nitty_test")
+        except:
+            pass
+        utils.download_file("/alice/sim/2012/LHC12a11a/137686/AOD157/0001/AliAOD.Muons.root",
+                            "/tmp/nitty_test/AliAOD.Muons.root")
+        self.assertTrue(os.path.isfile("/tmp/nitty_test/AliAOD.Muons.root"))
+        shutil.rmtree("/tmp/nitty_test")
+        # without specifiying dest file name:
+        utils.download_file("/alice/sim/2012/LHC12a11a/137686/AOD157/0001/AliAOD.Muons.root",
+                            "/tmp/nitty_test/")
+        self.assertTrue(os.path.isfile("/tmp/nitty_test/AliAOD.Muons.root"))
+        shutil.rmtree("/tmp/nitty_test")
+
+    # @skip("Skip download test")
     def test_downloaded_something(self):
+        utils.check_alien_token()
         utils.download_dataset("LHC10h_AOD160", 0.001)
+
+    def test_download_files_from_archive(self):
+        try:
+            shutil.rmtree("/tmp/nitty_test")
+        except:
+            pass
+        utils.download_from_grid_archive(
+            '/alice/sim/2012/LHC12a11a/137686/AOD157/0001/root_archive.zip',
+            '/tmp/nitty_test/alice/sim/2012/LHC12a11a/137686/AOD157/0001/root_archive.zip',
+        )
+        self.assertTrue(os.path.isfile(
+            '/tmp/nitty_test/alice/sim/2012/LHC12a11a/137686/AOD157/0001/AliAOD.root'))
+        shutil.rmtree("/tmp/nitty_test")
 
 
 class Test_grid_features(TestCase):
@@ -54,6 +84,14 @@ class Test_grid_features(TestCase):
         self.assertEqual(utils.find_sources_of_merged_files(merge_results),
                          ['/alice/cern.ch/user/c/cbourjau/nitty_test/001/AnalysisResults.root',
                           '/alice/cern.ch/user/c/cbourjau/nitty_test/002/AnalysisResults.root'])
+
+    def test_find_associated_archive_files(self):
+        urls = utils.find_associated_archive_files(
+            datadir=u"/alice/sim/2012/LHC12a11a",
+            run_number_prefix=u"",
+            runs=[137686, 138534, 138653, 139038, 139437],
+            data_pattern=u"AOD157/*/AliAOD.root")
+        self.assertGreater(len(urls), 0)
 
 
 class Test_environment(TestCase):
