@@ -1,7 +1,7 @@
 from setuptools import setup
 from glob import glob
 
-install_requires = ['pytz', 'pygments']
+install_requires = ['rootpy', 'pygments']
 tests_require = ['nose']
 
 setup(
