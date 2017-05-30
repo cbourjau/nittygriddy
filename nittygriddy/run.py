@@ -114,4 +114,7 @@ def create_subparsers(subparsers):
     parser_run.add_argument('--max_files_subjob', type=str, help="Maximum number of files per subjob", default="50")
     parser_run.add_argument('--wait_for_gdb', action='store_true', default=False,
                             help="Pause the execution to allow for connecting gdb to the process")
+    parser_run.add_argument('--runs_per_master', type=str, default="1",
+                            help="Number of runs to be processed by each master job. Set it to 0 to process\
+                            the entire runlist with one masterjob.")
     parser_run.set_defaults(op=run)

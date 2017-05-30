@@ -117,6 +117,9 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
   plugin->SetSplitMaxInputFileNumber(atoi(GetSetting("max_files_subjob").c_str()));
   plugin->SetMergeExcludes("EventStat_temp.root"
 			   "event_stat.root");
+  int runs_per_master = atoi(GetSetting("runs_per_master").c_str());
+  int n_runs = TString(GetSetting("run_list").c_str()).CountChar(' ') + 1;
+  plugin->SetNrunsPerMaster(runs_per_master > 0 ? runs_per_master : n_runs);
   // Use run number as output folder names
   plugin->SetOutputToRunNo();
   plugin->SetTTL(atoi(GetSetting("ttl").c_str()));
