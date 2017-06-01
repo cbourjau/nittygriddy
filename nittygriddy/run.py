@@ -5,9 +5,11 @@ from datetime import datetime
 from glob import glob
 import os
 import shutil
-import subprocess
+
+import ROOT
 
 from nittygriddy import utils, settings
+
 
 def _prepare_output_dir(args):
     """
@@ -55,6 +57,8 @@ def run(args):
 
     # start the analysis
     os.chdir(output_dir)
+    utils.load_alice_libs()
+    ROOT.gROOT.LoadMacro(r'run.C')
     if args.runmode != "grid":
         # generate input file
         ds = utils.get_datasets()[args.dataset]
@@ -78,21 +82,14 @@ def run(args):
             if len(filtered_results) == 0:
                 raise ValueError("No local files found at {} matching run list".format(search_string))
             input_files.write('\n'.join(filtered_results) + '\n')
-        # command to start the analysis
-        cmd = ['root', '-l', '-q', 'run.C']
+        # Start the analysis
+        ROOT.run()
     else:
-        cmd = ['root', '-l', '-q', '-b', '-x', 'run.C(\"full\")']
-    procs = []
-    try:
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        procs.append(p)
-        for line in iter(p.stdout.readline, b''):
-            print(line.rstrip())  # rstrip to remove \n; doesn't like carriage returns
-    except KeyboardInterrupt, e:
-        for proc in procs:
-            print "Killing: ", proc
-            proc.terminate()
-        raise e
+        # Set batch mode when submitting to the grid to be able to use it via ssh/tmux
+        # FIXME: Would be great to have something similar for proof
+        # lite, but with the option to terminate like in the gui...
+        ROOT.gROOT.SetBatch(True)
+        ROOT.run("full")
 
 
 def create_subparsers(subparsers):

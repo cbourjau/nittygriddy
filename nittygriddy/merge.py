@@ -1,6 +1,5 @@
 import os
 from pprint import pprint
-
 import subprocess
 
 import ROOT
@@ -24,14 +23,12 @@ def merge(args):
     if ROOT.GetSetting("runmode") != "grid":
         raise ValueError("The data in this folder was not run on the grid!")
 
-    # root does not like it if the stdout is piped and it uses some shell functionality
-    # thus, using call on the whole string and shell True
+    utils.load_alice_libs()
+    ROOT.gROOT.LoadMacro(r'run.C')
     if args.mergemode == 'online':
-        cmd = r'root -b -l -q -x "run.C(\"merge_online\")"'
-        subprocess.check_call(cmd, shell=True)
+        ROOT.run("merge_online")
     elif args.mergemode == 'offline':
-        cmd = r'root -b -l -q -x "run.C(\"merge_offline\")"'
-        subprocess.check_call(cmd, shell=True)
+        ROOT.run("merge_offline")
 
     if args.mergemode == 'download':
         workdir = os.path.dirname(os.path.abspath("./run.C")).split("/")[-1]
