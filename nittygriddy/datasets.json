@@ -277,15 +277,25 @@
 	"run_list": "258537, 258499, 258477, 258456, 258454, 258452, 258426, 258393, 258391, 258359, 258336, 258332, 258307, 258303, 258301, 258278, 258274, 258271, 258258, 258257, 258256, 258204, 258198, 258197, 258178, 258117, 258114, 258113, 258109, 258108, 258107, 258063, 258060, 258059, 258053, 258049, 258045, 258042, 258041, 258039, 258019, 258017, 258014, 258012, 258008, 258003, 257992, 257989, 257986, 257979, 257960, 257958, 257957, 257937, 257936, 257893, 257892, 257853, 257851, 257850, 257804, 257800, 257799, 257797, 257773, 257765, 257757, 257754, 257737, 257735, 257727, 257725, 257724, 257697, 257692, 257689, 257688, 257687, 257685",
 	"notes": "13 TeV, PDG run list, Good runs (in Logbook or at RTC if no entry in logbook) with FMD, ITS, TPC, and V0"
     },
-    "LHC15o_pass3": {
+    "LHC15o_pass5_lowIR": {
 	"datatype": "aod",
 	"system": "PbPb",
 	"is_mc": "false",
 	"datadir": "/alice/data/2015/LHC15o/",
-	"data_pattern": "pass3_lowIR_pidfix/AOD/*/AliAOD.root",
+	"data_pattern": "pass5_lowIR/AOD/*/AliAOD.root",
 	"run_number_prefix": "000",
-	"run_list": "244918, 244980, 246391, 244982, 245064, 246392",
-	"notes": "7 TeV, Good runs with FMD, ITS, TPC, and V0"
+	"run_list": "244917, 244918, 244975, 244980, 244982, 244983, 245064, 245066, 245068, 246390, 246391, 246392",
+	"notes": "5.02 TeV, Good runs with FMD, ITS, TPC, and V0. This is not the full run list since it requires the FMD!"
+    },
+    "LHC15o_pass1_HIR": {
+	"datatype": "aod",
+	"system": "PbPb",
+	"is_mc": "false",
+	"datadir": "/alice/data/2015/LHC15o/",
+	"data_pattern": "pass1/AOD/*/AliAOD.root",
+	"run_number_prefix": "000",
+	"run_list": "246980, 246865, 246809, 246808, 246766, 246765, 246763, 246759, 246676, 246675, 246495, 246493, 246276, 246275, 246225, 246185, 246153, 246089, 246052, 245963, 245954, 245833, 245705, 245683",
+	"notes": "5.02 TeV, Good runs with FMD, ITS, and V0. This is not the full run list since it requires the FMD!"
     },
     "LHC16i5b": {
 	"datatype": "aod",
