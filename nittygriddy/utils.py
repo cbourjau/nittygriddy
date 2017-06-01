@@ -1,5 +1,6 @@
 from glob import glob
 import json
+import logging
 import os
 import re
 import shutil
@@ -89,19 +90,25 @@ def download_file(alien_src, local_dest):
 def find_associated_archive_files(datadir, run_number_prefix, runs, data_pattern):
     check_alien_token()
     urls = []
-    for run in runs:
-        # Create a search string for this run; make sure its a string not u""
-        search_string = str(os.path.join(datadir,
-                                         run_number_prefix + str(run),
-                                         os.path.dirname(data_pattern)))
-        # search for the respective archives depending on the required file name
-        if "AliESDs.root" in data_pattern:
-            archive_name = "root_archive.zip"
-        if "AliAOD.root" in data_pattern:
-            archive_name = "root_archive.zip"  # "aod_archive.zip"
-        finds = ROOT.TAliEnFind(search_string, archive_name)
-        # Get file turns the URL into a string. Talk about indirection...
-        urls += [el.GetFirstUrl().GetFile() for el in finds.GetCollection().GetList()]
+    archive_names = ["root_archive.zip"]
+    if "AliAOD.root" in data_pattern:
+        archive_names.append("aod_archive.zip")
+
+    for archive_name in archive_names:
+        for run in runs:
+            # Create a search string for this run; make sure its a string not u""
+            search_string = str(os.path.join(datadir,
+                                             run_number_prefix + str(run),
+                                             os.path.dirname(data_pattern)))
+            # Most archives are called `root_archive.zip` but some are called aod_archive.root
+            # Maybe there are more species out there waiting to be found by a keen explorer!
+            finds = ROOT.TAliEnFind(search_string, archive_name)
+            # Get file turns the URL into a string. Talk about indirection...
+            urls += [el.GetFirstUrl().GetFile() for el in finds.GetCollection().GetList()]
+        # Did we find any files? If not, lets try it with the next archive name
+        if len(urls) != 0:
+            break
+    logging.debug("Number of files found matching search string {}".format(len(urls)))
     return urls
 
 
@@ -456,3 +463,19 @@ def project_uses_ConfigureWagon():
 def project_uses_train_cfg():
     cur_dir = os.path.abspath(os.path.curdir)
     return os.path.isfile(os.path.join(cur_dir, "MLTrainDefinition.cfg"))
+
+
+def load_alice_libs():
+    """
+    Load some default ALICE libraries. Basically, this makes aliroot available through pyroot
+    """
+    libs = ["$ALIROOT/lib/libSTAT.so", "$ALIROOT/lib/libSTEERBase.so"]
+    includes = ["$ALICE_ROOT/include", "$ALICE_PHYSICS/include"]
+    for lib in libs:
+        if ROOT.gSystem.Load(lib) < 0:
+            raise ValueError("Error loading {}".format(lib))
+    for inc in includes:
+        # This function is void, so we have to check it ourselfs
+        if not os.path.exists(os.path.expandvars(inc)):
+            raise ValueError("Unable to add {} to include path".format(inc))
+        ROOT.gSystem.AddIncludePath("-I" + inc)
