@@ -1,0 +1,36 @@
+import tempfile
+import os
+from os import path
+import subprocess
+
+
+def profile(args):
+    """
+    Run the poor-mans-profiler and open a browser to see the produced svg
+    """
+    pid = str(args.pid)
+    tmpdir = tempfile.gettempdir()
+    # make sure we don't have old files floating around
+    gdb_file = path.join(tmpdir, pid + ".gdb")
+    svg_file = path.join(tmpdir, pid + ".svg")
+    for f in [gdb_file, svg_file]:
+        try:
+            os.remove(f)
+        except:
+            pass
+    nitty_root = path.dirname(os.path.abspath(__file__))
+    poor_mans = path.join(nitty_root, "poormans.sh")
+    print "See the profiling result at {}".format(svg_file)
+    p = subprocess.Popen(['bash', poor_mans, str(args.nsamples), pid, gdb_file, svg_file, nitty_root])
+    try:
+        p.wait()
+    except KeyboardInterrupt:
+        p.kill()
+
+
+def create_subparsers(subparsers):
+    description = """Profile a running nitty-process. The profiler produces a svg file which can be view in the browsers. It updates every few seconds"""
+    parser_new = subparsers.add_parser('profile', description=description)
+    parser_new.add_argument('pid', help='PID of the process you want to profile')
+    parser_new.add_argument('--nsamples', help='Number of samples to be taken', default=50)
+    parser_new.set_defaults(op=profile)
