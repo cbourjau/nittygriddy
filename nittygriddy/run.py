@@ -9,6 +9,7 @@ import subprocess
 
 from nittygriddy import utils, settings
 
+
 def _prepare_output_dir(args):
     """
     Prepare the output dir for the current job
@@ -36,10 +37,12 @@ def _prepare_output_dir(args):
             raise e
     utils.copy_template_files_to(output_dir)
 
-    if utils.project_uses_ConfigureWagon():
-        shutil.copy(os.path.join(os.path.dirname(output_dir), "ConfigureWagon.C"), output_dir)
-    if utils.project_uses_train_cfg():
+    if utils.project_uses_ConfigureTrain():
+        shutil.copy(os.path.join(os.path.dirname(output_dir), "ConfigureTrain.C"), output_dir)
+    elif utils.project_uses_train_cfg():
         shutil.copy(os.path.join(os.path.dirname(output_dir), "MLTrainDefinition.cfg"), output_dir)
+    else:
+        raise RuntimeError("Neither ConfigureTrain.C nor MLTrainDefinition.cfg found in current folder!")
     if args.par_files:
         utils.prepare_par_files(args.par_files, output_dir)
 
@@ -100,7 +103,7 @@ def create_subparsers(subparsers):
     Create the "run" subparser
     """
     description_run = """Start analysis on target platform. Must be executed from a
-    nittygriddy project folder (ie. next to the ConfigureWagon.C or a MLTrainDefinition.cfg files)"""
+    nittygriddy project folder (ie. next to the ConfigureTrain.C or a MLTrainDefinition.cfg files)"""
     parser_run = subparsers.add_parser('run', description=description_run)
     parser_run.add_argument('runmode', choices=('local', 'lite', 'grid'))
     parser_run.add_argument('dataset', type=str, help="Use this dataset")

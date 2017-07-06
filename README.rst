@@ -4,8 +4,8 @@ Nittygriddy
 
 Nitty griddy aims to make the deployment of analyses using the Aliroot/Aliphysics framework easy, transparent, and reproducible.
 The primary goal is to completely eliminate the ungodly practice of copy-pasting together ``run.C`` files from all over the place.
-A nittygriddy "project" requires the user to only provide the settings for the analysis itself - nothing else.
-The way these settings are supplied is analogous to how one configures a wagon of a LEGO train.
+A nittygriddy "project" requires the user to only provide the settings for the specific analysis they want to run - nothing related to how or where you would like to run your analysis.
+The way these settings are supplied is analogous to how one configures a LEGO train.
 The deployment in ``local`` (sequential), ``proof lite`` (local parallel) or ``grid`` is then completely transparent and does not require the editing of any files.
 Nittygriddy also makes it easy to download parts of a desired dataset for local *offline* development - no need for running grid test mode.
 On top of that, nittygriddy makes it easy to trigger the merging process once a grid analysis is finished.
@@ -32,14 +32,14 @@ This installs nittygriddy in ``editable`` mode, meaning that any changes to the 
 
 Eitherway, the command ``nitty`` is now avialable on the command line, along with its hopefully helpful ``--help``.
 
-Setting up a "project"
-======================
+Setting up a "train" folder
+===========================
 
-What I call "a project" in the following is really nothing more than a folder where you store the settings for a specific analysis. Currently, all the settings are in one single file but more files might be added in the future. Also, note that in order to use nittygriddy **your task must be present in your local aliphysics installation** (which it really should anyways)!
+What I call a "train" in the following is really nothing more than a folder where you store the settings for a specific analysis. An analysis usually consists of several task (e.g. ``AliMultSelectionTask`` and your own task). Currently, all the settings are in one single file (``ConfigureTrain.C``) which make any folder a "train folder". Also, note that in order to use nittygriddy **your task must be present in your local aliphysics installation** (which it really should anyways)!
 
-ConfigureWagon.C
+ConfigureTrain.C
 ----------------
-The only ``.C`` file needed. It reflects setting up the options for your task analog to what is done in the lego trains. Note that this file will be compiled and therefore has to be valid cpp (this the ``#includes`` in the example below). The reason for this is that using the interpreter is just plain evil and will lead to undefined behavior eventually. The shortest possible version, would look something like this:
+The only ``.C`` file needed. It reflects setting up the options for your task analog to what is done in the lego trains. Note that this file will be compiled and therefore has to be valid cpp (thus all the ``#includes`` in the example below). The reason for this is that using the interpreter is just plain evil and will lead to undefined behavior and sad users eventually. The shortest possible version, would look something like this:
 
 .. code-block:: cpp
 
@@ -47,7 +47,7 @@ The only ``.C`` file needed. It reflects setting up the options for your task an
     #include "AliVEvent.h"
     #include "AliBasedNdetaTask.h"
 
-    void ConfigureWagon() {
+    void ConfigureTrain() {
       // Load you AddTask macro
       gROOT->LoadMacro("$ALICE_PHYSICS/PWGLF/FORWARD/analysis2/AddTaskdNdeta.C");
     
@@ -145,7 +145,7 @@ Do you have a valid alien-token? Its on the todo-list to ask for it more gracefu
 
 Migrate to LEGO trains
 ----------------------
-Once your analysis works, you should be able to almost seamlessly use your ``ConfigureWagon.C`` content in the LEGO wagon setup. Please use LEGO-trains whenever possible and reasonable to save resources!
+Once your analysis works, you should be able to almost seamlessly use your ``ConfigureTrain.C`` content in the LEGO wagon setup. Please use LEGO-trains whenever possible and reasonable to save resources!
 
 
 Debug your code like a boss (with GDB)
@@ -166,7 +166,7 @@ But there might be a few caveats. I wrote a small blog post about how to use gdb
 What is happening behind the scene?
 ===================================
 
-When running your analysis nitty griddy create a new folder in your project folder.
+When running your analysis nitty griddy create a new folder in your train folder.
 It then generates a ``run.C`` file from your options and copies it into that folder.
 This ``run.C`` can be run on independently and should be easy to read.
 This has the advantage that you can always just stop using ``nittygriddy`` and drop back to modifying the macros yourself - no vendor lockin!

@@ -3,7 +3,7 @@
 #include <TROOT.h>
 #include <AliPhysicsSelectionTask.h>
 
-void ConfigureWagon() {
+void ConfigureTrain() {
   // Add mult selection Task
   gROOT->LoadMacro("$ALICE_PHYSICS/OADB/COMMON/MULTIPLICITY/macros/AddTaskMultSelection.C");
   gROOT->ProcessLine("AddTaskMultSelection()");

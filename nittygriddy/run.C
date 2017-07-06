@@ -201,7 +201,7 @@ void run(const std::string gridMode="")
     mgr->SetGridHandler(alienHandler);
   }
 
-  // Add tasks; either from MLTrainDefinition.cfg or ConfigureWagon.C
+  // Add tasks; either from MLTrainDefinition.cfg or ConfigureTrain.C
   if (GetSetting("use_train_conf") == "true") {
     std::cout << "Loading analysis tasks from MLTrainDefinition.cfg file" << std::endl;
     TObjArray *arr = AliAnalysisTaskCfg::ExtractModulesFrom("MLTrainDefinition.cfg");
@@ -212,9 +212,9 @@ void run(const std::string gridMode="")
       module->ExecuteConfigMacro();
     }
   } else {
-    std::cout << "Loading analysis tasks from ConfigureWagon.C file" << std::endl;
-    gROOT->LoadMacro("./ConfigureWagon.C+");
-    gROOT->ProcessLine("ConfigureWagon()");
+    std::cout << "Loading analysis tasks from ConfigureTrain.C file" << std::endl;
+    gROOT->LoadMacro("./ConfigureTrain.C+");
+    gROOT->ProcessLine("ConfigureTrain()");
   }
 
   if (!mgr->InitAnalysis()) return;

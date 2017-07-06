@@ -9,14 +9,14 @@ def new(args):
     except OSError:
         print "Cannot create output folder {}".format(new_dir)
         return
-    # Copy default `configureWagon.C` to new folder
+    # Copy default `configureTrain.C` to new folder
     template_dir = os.path.dirname(os.path.abspath(__file__))
-    shutil.copy(os.path.join(template_dir, "ConfigureWagon.C"), new_dir)
+    shutil.copy(os.path.join(template_dir, "ConfigureTrain.C"), new_dir)
     print "Created new project directory {}".format(args.name)
 
 
 def create_subparsers(subparsers):
-    description = """Create a new project folder with a default `ConfigureWagon.C` file."""
+    description = """Create a new project folder with a default `ConfigureTrain.C` file."""
     parser_new = subparsers.add_parser('new', description=description)
     parser_new.add_argument('name', help='The name of the new project; used for folder name')
     parser_new.set_defaults(op=new)
