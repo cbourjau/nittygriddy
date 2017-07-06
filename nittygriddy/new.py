@@ -12,7 +12,7 @@ def new(args):
     # Copy default `configureWagon.C` to new folder
     template_dir = os.path.dirname(os.path.abspath(__file__))
     shutil.copy(os.path.join(template_dir, "ConfigureWagon.C"), new_dir)
-    print "Create new project directory {}".format(args.name)
+    print "Created new project directory {}".format(args.name)
 
 
 def create_subparsers(subparsers):
