@@ -170,6 +170,25 @@ The above sets up your analysis, prints out its process id (eg. 27575) and then 
 
 But there might be a few caveats. I wrote a small blog post about how to use gdb `here <http://cbourjau.github.io/alice/aliroot/aliphysics/2015/12/17/Debugging_aliphysics.html>`_.
 
+Profile your code
+-----------------
+
+Nittygriddy makes it easy to use ``gdb`` as a stochastic profiler. This means that the running analysis is interuped many times, and a statistic is made where the analysis spends most of its time. This kind of profiling can be very visualized in so called "Flame Graphs". Nittygriddy packages some of the files from the original [FlameGraph project](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links) to make this process as easy as possible and this is how.
+
+First, you have to start a local analysis. You probably want to start it with the ``--wait_for_gdb`` flag to get the ``pid``, but you can also just find the ``pid`` any other way, if you prefer::
+
+  $ nitty run local LHC10h_AOD160 --wait_for_gdb
+
+Now, you have to open a second terminal where you attach the profiler to the ``pid`` of the running analysis (e.g. 27575)::
+
+  $ nitty profile 27575 --nsamples=100
+
+Remember to resume the analysis in the first terminal! Now you can use your browser to check out the flamegraph. For the above ``pid`` it would be at ``/tmp/27575.svg``. The ``svg`` is updated every 5 samples, so give it some time!
+
+An example of a flamegraph might then look something like this:
+
+.. image:: examples/flame_graph.png
+
 
 What is happening behind the scene?
 ===================================
