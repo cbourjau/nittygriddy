@@ -82,13 +82,21 @@ The only ``.C`` file needed. It reflects setting up the options for your task an
 Using Nittygriddy
 =================
 
-I'm lost::
+I'm lost. Note that ``--help`` is also available for each subcommand::
 
   $ nitty --help
+
+Create a new train folder. I.e. create a new folder with a minimal working ``ConfigureTrain.C``::
+
+  $ nitty new a_new_train
   
-List all datasets::
+List all avialable datasets::
 
   $ nitty datasets -l
+
+Search all datasets for something (e.g. the collsions system)::
+
+  $ nitty datasets -s PbPb
 
 Show details about a dataset::
 
