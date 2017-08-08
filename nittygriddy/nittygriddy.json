@@ -1,6 +1,0 @@
-[
-    {
-	"Dependencies":"libOADB.so libSTEERBase.so libAOD.so libANALYSISalice.so libPWGCFCorrelationsC2.so"
-    }
-];
-    
