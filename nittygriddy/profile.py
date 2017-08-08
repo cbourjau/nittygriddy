@@ -29,7 +29,7 @@ def profile(args):
 
 
 def create_subparsers(subparsers):
-    description = """Profile a running nitty-process. The profiler produces a svg file which can be view in the browsers. It updates every few seconds"""
+    description = """Profile a running nitty-process. The profiler produces a svg file which can be view in the browsers. It updates every few seconds, so be patient. This feature depends on gdb. If you get "ERROR: No stack counts found" messages, you might not have set the proper permissions for gdb. Google for the file /etc/sysctl.d/10-ptrace.conf"""
     parser_new = subparsers.add_parser('profile', description=description)
     parser_new.add_argument('pid', help='PID of the process you want to profile')
     parser_new.add_argument('--nsamples', help='Number of samples to be taken', default=50)

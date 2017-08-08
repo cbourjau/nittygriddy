@@ -13,8 +13,11 @@ flamegraphpath=$5
 for x in $(seq 1 $nsamples); do
     gdb -ex "set pagination 0" -ex "thread apply all bt" -batch -p $pid 2> /dev/null >> $outgdb
     if ! ((x % 5)); then
-	cat $outgdb | $flamegraphpath/stackcollapse-gdb.pl | grep TTreePlayer::Process \
-	    | $flamegraphpath/flamegraph.pl > $outsvg
+	cat $outgdb | $flamegraphpath/stackcollapse-gdb.pl | grep TTreePlayer::Process | $flamegraphpath/flamegraph.pl > $outsvg
+	if [ $? -ne 0 ]; then
+	    echo "Did you set the proper permissions for gdb? Try 'gdb -p <your_pid>' first"
+	    break
+	fi
     fi
     sleep $sleeptime
 done
