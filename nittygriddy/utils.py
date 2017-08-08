@@ -92,6 +92,8 @@ def find_associated_archive_files(datadir, run_number_prefix, runs, data_pattern
     urls = []
     archive_names = ["root_archive.zip"]
     if "AliAOD.root" in data_pattern:
+        # Sometimes, just sometimes, it seemed like a good idea to
+        # call the archives differently...
         archive_names.append("aod_archive.zip")
 
     for archive_name in archive_names:
@@ -103,8 +105,16 @@ def find_associated_archive_files(datadir, run_number_prefix, runs, data_pattern
             # Most archives are called `root_archive.zip` but some are called aod_archive.root
             # Maybe there are more species out there waiting to be found by a keen explorer!
             finds = ROOT.TAliEnFind(search_string, archive_name)
-            # Get file turns the URL into a string. Talk about indirection...
-            urls += [el.GetFirstUrl().GetFile() for el in finds.GetCollection().GetList()]
+            # Ok, so. ROOT thinks linked lists are fucking
+            # awesome. Unfortunately, their access is is n^2, so we
+            # choke on a call to finds.GetCollection() if we have a
+            # few thousand urls, because deep inside the shit code of
+            # AliEn, we iterate through the shit that is a TList. I
+            # just want to get a few fucking files! Its 2017! Bottom
+            # line, we avoid some of this crap by fishing out the urls
+            # manually from the TGridResult...
+            gr = finds.GetGridResult()
+            urls = [str(el.GetValue('turl')).replace("alien://", "") for el in gr]
         # Did we find any files? If not, lets try it with the next archive name
         if len(urls) != 0:
             break

@@ -252,7 +252,7 @@
 	"system": "PbPb",
 	"is_mc": "true",
 	"datadir": "/alice/sim/2016/LHC16d2/",
-	"data_pattern": "0*/AliESDs.root",
+	"data_pattern": "*/AliESDs.root",
 	"run_number_prefix": "",
 	"run_list": "245064",
 	"notes": "5.02 TeV, EPOS-LHC MB simulation, 245064 (LHC15o) anchor, ALIROOT-6632"
