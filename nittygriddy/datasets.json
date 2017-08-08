@@ -306,5 +306,25 @@
 	"run_number_prefix": "",
 	"run_list": "245064",
 	"notes": "5020 GeV, test production for AMPT with sting melting, semi-central events, LHC15o anchors, ALIROOT-9000, 20768 events; trigger-string is name 'MB', AliVEvent::kINT7 not set"
+    },
+    "LHC16q_pass1_wSSD": {
+	"datatype": "aod",
+	"system": "pPb",
+	"is_mc": "false",
+	"datadir": "/alice/data/2016/LHC16q/",
+	"data_pattern": "pass1_CENT_wSDD/AOD/*/AliAOD.root",
+	"run_number_prefix": "000",
+	"run_list": "265525, 265521, 265501, 265500, 265435, 265427, 265424, 265422, 265421, 265420, 265419, 265388, 265387, 265385, 265384, 265383, 265381, 265378, 265377, 265344, 265343, 265342, 265338, 265335, 265334",
+	"notes": "5.02 TeV, PDG run list + FMD (good) and V0 (good) in logbook; +1M reconstructed"
+    },
+    "LHC16f4c": {
+	"datatype": "aod",
+	"system": "PbPb",
+	"is_mc": "true",
+	"datadir": "/alice/sim/2016/LHC16f4c/",
+	"data_pattern": "*/galice.root",
+	"run_number_prefix": "",
+	"run_list": "1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16",
+	"notes": "PbPb, AMPT, fast generation, 2.76TeV (min. bias), String melting ON, rescattering ON, ALIROOT-6741"
     }
 }
