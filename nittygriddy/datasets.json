@@ -318,7 +318,7 @@
 	"notes": "5.02 TeV, PDG run list + FMD (good) and V0 (good) in logbook; +1M reconstructed"
     },
     "LHC16f4c": {
-	"datatype": "aod",
+	"datatype": "esd",
 	"system": "PbPb",
 	"is_mc": "true",
 	"datadir": "/alice/sim/2016/LHC16f4c/",
