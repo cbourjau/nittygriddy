@@ -440,7 +440,8 @@ def prepare_get_setting_c_file(output_dir, args):
                    ttl=args.ttl,
                    max_files_subjob=args.max_files_subjob,
                    use_train_conf="true" if project_uses_train_cfg() else "false",
-                   runs_per_master=args.runs_per_master)
+                   runs_per_master=args.runs_per_master,
+                   max_n_events=args.max_n_events)
         get_setting_c.write(as_string)
 
 

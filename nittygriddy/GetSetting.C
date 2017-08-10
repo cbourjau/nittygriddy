@@ -38,6 +38,8 @@ std::string GetSetting(const std::string settingName) {{
       return "{use_train_conf}";
     else if (settingName == "runs_per_master")
       return "{runs_per_master}";
+    else if (settingName == "max_n_events")
+      return "{max_n_events}";
     else
       std::cout << "Invalid setting name: " << settingName << std::endl;
     return "";

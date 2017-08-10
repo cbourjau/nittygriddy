@@ -139,7 +139,7 @@ void run(const std::string gridMode="")
 {
   // load GetSetting.C macro to allow access to settings for this particular dataset
   // gROOT->LoadMacro("./GetSetting.C");
-  Int_t max_events = -1;
+  Int_t const max_events = atoi(GetSetting("max_n_events").c_str());
   Int_t runmode = -1;
   if (GetSetting("wait_for_gdb") == "true"){
     std::cout << "Execution is paused so that you cann attach gdb to the running process:" << std::endl;
@@ -235,7 +235,8 @@ void run(const std::string gridMode="")
 	mgr->StartAnalysis("proof", chain, max_events);
 
       else if (runmode == kLOCAL) {
-	// in order to be inconvinient, aliroot does interprete max_events differently for proof and local :P
+	// in order to be inconvinient, aliroot does interprete
+	// max_events differently for proof and local :P
 	if (max_events == -1) mgr->StartAnalysis("local", chain);
 	else mgr->StartAnalysis("local", chain, max_events);
       }
