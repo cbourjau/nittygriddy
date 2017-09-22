@@ -297,12 +297,6 @@ def check_alien_token():
     AlienTokenError :
         If there was an error checking the token or if the existing token is invalid
     """
-    # Tell python that GRID_CONNECTION is a global variable which we might write to
-    global GRID_CONNECTION
-    if GRID_CONNECTION is None:
-        GRID_CONNECTION = ROOT.TGrid.Connect("alien")
-    if not GRID_CONNECTION.IsConnected():
-        raise AlienTokenError("No grid connection. Call `alien-token-init` before running nittygriddy.")
     cmd = ['alien-token-info']
     try:
         output = subprocess.check_output(cmd)
