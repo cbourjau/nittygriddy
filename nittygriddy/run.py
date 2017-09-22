@@ -110,7 +110,7 @@ def create_subparsers(subparsers):
     parser_run.add_argument('--suffix', type=str, help="Attach to the end of the folder name and files uploaded to the grid")
     parser_run.add_argument('--nworkers', type=str, help="Number of workers for proof lite", default="-1")
     parser_run.add_argument('--par_files', type=str, default="",
-                            help="Patch aliphysics on the grid with these space separeated par or libXXX.so files. Build par_files before with cd $ALICE_PHYSICS/../build; make MODULE.par; make -j$MJ install")
+                            help="Patch aliphysics on the grid with these space separeated par or libXXX.so files. Build par_files before with `cd $ALICE_WORK_DIR/BUILD/AliPhysics-latest/AliPhysics/; make MODULE.par; make -j$MJ install`")
     parser_run.add_argument('--run_list', type=str,
                             help="Overwrite default (comma seperated) run list for the given dataset")
     parser_run.add_argument('--ttl', type=str, help="Number of seconds this job should live", default="30000")
