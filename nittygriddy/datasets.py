@@ -24,19 +24,22 @@ def datasets(args):
     elif args.search:
         search_datasets_for_string(args.search)
     elif args.download:
-        if not args.volume:
-            raise ValueError("No download volume specified")
-        elif not utils.get_datasets().get(args.download, False):
-            raise ValueError("Dataset not found.")
+        ds_name, volume = args.download
+        try:
+            volume = float(volume)
+        except ValueError:
+            raise ValueError("Volume has to be a valid number, not `{}`".format(volume))
+        if not utils.get_datasets().get(ds_name, False):
+            raise ValueError("Dataset `{}` not found.".format(ds_name))
         elif args.run_list:
             # is the given run list a subset of the full run list?
             user_run_list = [int(r.strip()) for r in args.run_list.split(",")]
             full_run_list = [int(r.strip()) for r in
-                             utils.get_datasets().get(args.download)['run_list'].split(",")]
+                             utils.get_datasets().get(ds_name)['run_list'].split(",")]
             if not set(user_run_list).issubset(full_run_list):
                 raise ValueError("Run {} list is not a subset of this periods run list ({})!"
                                  .format(user_run_list, full_run_list))
-        utils.download_dataset(args.download, args.volume, args.run_list)
+        utils.download_dataset(ds_name, volume, args.run_list)
 
 
 def search_datasets_for_string(s):
@@ -70,11 +73,10 @@ def create_subparser(subparsers):
         '--show',
         help="show only given dataset", type=str)
     parser_datasets.add_argument(
-        '-d', '--download',
-        help="Download subset of specified dataset (see --volume)", type=str)
-    parser_datasets.add_argument(
-        '--volume',
-        help="Use with --download; Download this many GB", type=float)
+        '--download',
+        nargs=2,
+        metavar=('dataset', 'volume [GB]'),
+        help="Download `volume [GB]` of specified dataset")
     parser_datasets.add_argument(
         '--run_list',
         help="Optional; use with --download; comma separeated string", type=str)

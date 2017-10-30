@@ -37,7 +37,7 @@ Using nittygriddy for the impatient
 Don't wanna read instructions? This is how you start an analysis on local data::
 
   $ alien-token-init <your-cern-user-name>
-  $ nitty datasets --download LHC15o_pass1_HIR --volume=1  # Download 1GB of the specified dataset
+  $ nitty datasets --download LHC15o_pass1_HIR 1  # Download 1GB of the specified dataset
   $ nitty new my-analysis    # Create an example analysis folder (runs AliMultSelectionTask)
   $ cd my-analysis
   $ # Run the analysis of this folder on the LHC15o dataset (parallel ("lite") with two processes)
@@ -50,8 +50,8 @@ Setting up a "train" folder
 
 What I call a "train" in the following is really nothing more than a folder where you store the settings for a specific analysis. An analysis usually consists of several task (e.g. ``AliMultSelectionTask`` and your own task). Currently, all the settings are in one single file (``ConfigureTrain.C``) which make any folder a "train folder". Also, note that in order to use nittygriddy **your task must be present in your local aliphysics installation** (which it really should anyways)!
 
-ConfigureTrain.C
-----------------
+`ConfigureTrain.C`
+------------------
 The only ``.C`` file needed. It reflects setting up the options for your task analog to what is done in the lego trains. Note that this file will be compiled and therefore has to be valid cpp (thus all the ``#includes`` in the example below). The reason for this is that using the interpreter is just plain evil and will lead to undefined behavior and sad users eventually. The shortest possible version, would look something like this:
 
 .. code-block:: cpp
@@ -85,11 +85,31 @@ The only ``.C`` file needed. It reflects setting up the options for your task an
 	   "Dependencies":"libOADB.so libSTEERBase.so libAOD.so libANALYSISalice.so libPWGCFCorrelationsC2.so"
        }
      ];
+..
 
+`nitty_datasets.yml`
+--------------------
+This file contains information about custom datasets. If the standard ones are used this is not necessary. The file should be located in your home directory at `~/nitty_datasets.yml`. The file has to be in `Yaml` formating. A typical entry looks like this:
 
-   datasets.json *(Not implemented, yet)*
-   --------------------------------------
-   This file contains information about custom datasets. If the standard ones are used this is not necessary.
+.. code-block::yaml
+
+  LHC15o_pass1_HIR_FMD:
+    data_pattern: pass1/AOD/*/AliAOD.root
+    datadir: /alice/data/2015/LHC15o/
+    datatype: aod
+    is_mc: 'false'
+    notes: 5.02 TeV, Good runs with FMD, ITS, and V0. This is not the full run list
+      since it requires the FMD!
+    run_list: 246980, 246865, 246809, 246808, 246766, 246765, 246763, 246759, 246676,
+      246675, 246495, 246493, 246276, 246275, 246225, 246185, 246153, 246089, 246052,
+      245963, 245954, 245833, 245705, 245683
+    run_number_prefix: '000'
+    system: PbPb
+
+  LHC15f_AOD171_FMD:
+  ...
+    
+Note that `Yaml`, just like Python, is indention based. But don't worry, if the syntax is faulty, nittygriddy will complain. Datasets which are defined in `nitty_datasets.yml` will be merged with the default ones which come with nittygriddy.
 
 
 Using Nittygriddy
@@ -118,7 +138,7 @@ Show details about a dataset::
 Download 5GB of data from the given dataset for offline developing.
 The files are saved in ``~/lhc_data/`` following the same folder structure as on the grid::
 
-  $ nitty datasets --download LHC10h_AOD160 --volume=5
+  $ nitty datasets --download LHC10h_AOD160 5
 
 Run your analysis in proof lite locally::
 

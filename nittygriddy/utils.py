@@ -114,7 +114,6 @@ def download_file(alien_src, local_dest):
     # fix the dest to include the file name
     if not os.path.basename(local_dest):
         local_dest = os.path.join(local_dest, os.path.basename(alien_src))
-
     with root_open("alien://" + alien_src) as f:
         if not f.Cp(local_dest):
             try:
@@ -184,7 +183,6 @@ def download_from_grid_archive(alien_src, local_dest):
     # fix the dest to include the file name
     if not os.path.basename(local_dest):
         local_dest = os.path.join(local_dest, os.path.basename(alien_src))
-
     with root_open("alien://" + alien_src) as f:
         if not f.IsArchive():
             raise ValueError("{} does not point to an archive file.".format(alien_src))
