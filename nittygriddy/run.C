@@ -40,8 +40,11 @@ TChain* makeChain() {
     chain = new TChain ("aodTree");
   }
   if (GetSetting("datatype") == "esd") {
-    chain = new TChain ("esdTree");  // Tree name in AliESDs.root
-    // chain = new TChain ("TE");  // Tree name in galice.root files
+    if (GetSetting("is_mc") == "true") {
+      chain = new TChain ("TE");  // Tree name in galice.root files
+    } else {
+      chain = new TChain ("esdTree");  // Tree name in AliESDs.root
+    }
   }
   TString incollection = "./input_files.dat";
   ifstream file_collect(incollection.Data());
@@ -191,7 +194,7 @@ void run(const std::string gridMode="")
   }
   if (GetSetting("is_mc") == "true" && GetSetting("datatype") == "esd") {
     AliMCEventHandler* handler = new AliMCEventHandler;
-    handler->SetReadTR(kTRUE);
+    handler->SetReadTR(kFALSE);
     mgr->SetMCtruthEventHandler(handler);
   }
 
