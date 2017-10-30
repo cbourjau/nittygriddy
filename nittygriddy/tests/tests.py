@@ -118,3 +118,19 @@ class Test_create_GetSetting_c_file(TestCase):
         _parser = parser.create_parser()
         args = _parser.parse_args(['run', 'lite', 'LHC12a11a'])
         utils.prepare_get_setting_c_file(tmp_dir, args)
+
+
+class Test_invalid_user_dataset_def(TestCase):
+    """
+    Test a bunch of stuff concerning the user created datasets
+    """
+    def missing_fields(self):
+        # Empty one should pass
+        ds = {}
+        utils.validate_dataset(ds)
+        # Inner entry is not a dictionary
+        ds = {'blub': ''}
+        self.assertRaises(ValueError, utils.validate_dataset, ds)
+        # Inner entry does not have the keys but is a dict
+        ds = {'blub': dict()}
+        self.assertRaises(ValueError, utils.validate_dataset, ds)

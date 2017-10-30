@@ -1,5 +1,5 @@
 from glob import glob
-import json
+import yaml
 import logging
 import os
 import re
@@ -18,6 +18,27 @@ from nittygriddy.alienTokenError import AlienTokenError
 GRID_CONNECTION = None
 
 
+def validate_dataset(ds):
+    """
+    Check if all entries in this dataset have all the required fields
+    Parameters
+    ----------
+    ds : dict
+        Dictionary of datasets
+    Raises
+    ------
+    ValueError: If a field is missing
+    """
+    req_fields = [
+        'data_pattern', 'datadir', 'datatype', 'is_mc', 'notes',
+        'run_list', 'run_number_prefix', 'system']
+    for name, entry in ds.items():
+        for field in req_fields:
+            if field not in entry.keys():
+                # import ipdb; ipdb.set_trace()
+                raise ValueError("Field `{}` missing in `{}` dataset definition".format(field, name))
+
+
 def get_datasets():
     """
     Get the dictionary describing the datasets
@@ -26,9 +47,27 @@ def get_datasets():
     dict :
         dataset dictionary
     """
-    with open(os.path.dirname(os.path.abspath(__file__)) + "/datasets.json", "read") as f:
-        datasets = json.load(f)
-    return datasets
+    default_ds_name = os.path.join(os.path.dirname(os.path.abspath(__file__)), "datasets.yml")
+    user_ds_name = os.path.expanduser("~/nitty_datasets.yml")
+    with open(default_ds_name, "read") as f:
+        default_ds = yaml.safe_load(f)
+        validate_dataset(default_ds)
+    # open the user's definitions; create the file if it does not exist
+    try:
+        with open(user_ds_name, "read") as f:
+            user_ds = yaml.safe_load(f)
+            validate_dataset(user_ds)
+    except IOError:
+        raise ValueError("No user datasets found!")
+        # File did not exist
+        user_ds = {}
+    # check if there is an intersection between the user defined and the default dataset
+    intersect = set(default_ds.keys()).intersection(user_ds.keys())
+    if intersect:
+        raise ValueError("The following user datasets are also in the default definitions. "
+                         "Please rename your ones in `~/nitty_datasets.yml`:\n {}"
+                         .format('/n'.join(intersect)))
+    return default_ds
 
 
 def copy_template_files_to(dest):
