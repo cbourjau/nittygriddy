@@ -32,6 +32,19 @@ This installs nittygriddy in ``editable`` mode, meaning that any changes to the 
 
 Eitherway, the command ``nitty`` is now avialable on the command line, along with its hopefully helpful ``--help``.
 
+Using nittygriddy for the impatient
+===================================
+Don't wanna read instructions? This is how you start an analysis on local data::
+
+  $ alien-token-init <your-cern-user-name>
+  $ nitty datasets --download LHC15o_pass1_HIR --volume=1  # Download 1GB of the specified dataset
+  $ nitty new my-analysis    # Create an example analysis folder (runs AliMultSelectionTask)
+  $ cd my-analysis
+  $ # Run the analysis of this folder on the LHC15o dataset (parallel ("lite") with two processes)
+  $ nitty run lite LHC15o_pass1_HIR --nworkers=2
+  $ ls ./latest/  # marvel at the resulting AnalysisResults.root file
+    
+
 Setting up a "train" folder
 ===========================
 
