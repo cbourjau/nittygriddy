@@ -11,8 +11,14 @@ setup(
     author='Christian Bourjau',
     author_email='christian.bourjau@cern.ch',
     packages=['nittygriddy', 'nittygriddy.tests'],
+    include_package_data=True,
     package_data={
-        'nittygriddy': ['datasets.json', 'run.C', 'GetSetting.C'],
+        'nittygriddy': [
+            'non-python-files/datasets.yml',
+            'non-python-files/run.C',
+            'non-python-files/GetSetting.C',
+            # 'examples/flame_graph.png'
+        ],
     },
     long_description=open('README.rst').read(),
     url='https://github.com/cbourjau/nittygriddy',

@@ -47,7 +47,7 @@ def get_datasets():
     dict :
         dataset dictionary
     """
-    default_ds_name = os.path.join(os.path.dirname(os.path.abspath(__file__)), "datasets.yml")
+    default_ds_name = os.path.join(_internal_files_dir(), "datasets.yml")
     user_ds_name = os.path.expanduser("~/nitty_datasets.yml")
     with open(default_ds_name, "read") as f:
         default_ds = yaml.safe_load(f)
@@ -71,12 +71,12 @@ def get_datasets():
 
 
 def copy_template_files_to(dest):
-    template_dir = os.path.dirname(os.path.abspath(__file__))
+    template_dir = _internal_files_dir()
     shutil.copy(os.path.join(template_dir, "run.C"), dest)
 
 
 def get_template_GetSetting():
-    template_dir = os.path.dirname(os.path.abspath(__file__))
+    template_dir = _internal_files_dir()
     with open(os.path.join(template_dir, "GetSetting.C")) as get_setting_c:
         return get_setting_c.read()
 
@@ -524,3 +524,12 @@ def load_alice_libs():
         if not os.path.exists(os.path.expandvars(inc)):
             raise ValueError("Unable to add {} to include path".format(inc))
         ROOT.gSystem.AddIncludePath("-I" + inc)
+
+
+def _internal_files_dir():
+    """
+    Return the absolute path to directory with nitty's internal files
+    """
+    # The dir with the python files
+    src_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(src_dir, 'non-python-files')

@@ -1,5 +1,6 @@
 import os
 import shutil
+import utils
 
 
 def new(args):
@@ -10,7 +11,7 @@ def new(args):
         print "Cannot create output folder {}".format(new_dir)
         return
     # Copy default `configureTrain.C` to new folder
-    template_dir = os.path.dirname(os.path.abspath(__file__))
+    template_dir = utils._internal_files_dir()
     shutil.copy(os.path.join(template_dir, "ConfigureTrain.C"), new_dir)
     print "Created new project directory {}".format(args.name)
 

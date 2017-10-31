@@ -2,6 +2,7 @@ import tempfile
 import os
 from os import path
 import subprocess
+import utils
 
 
 def profile(args):
@@ -18,7 +19,7 @@ def profile(args):
             os.remove(f)
         except:
             pass
-    nitty_root = path.dirname(os.path.abspath(__file__))
+    nitty_root = utils._internal_files_dir()
     poor_mans = path.join(nitty_root, "poormans.sh")
     print "See the profiling result at {}".format(svg_file)
     p = subprocess.Popen(['bash', poor_mans, str(args.nsamples), pid, gdb_file, svg_file, nitty_root])
