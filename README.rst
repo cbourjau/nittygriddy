@@ -16,21 +16,17 @@ And last but not least, nittygriddy does not do a "vendor lock-in": nittygriddy 
 
 Disclaimer
 ==========
-I am using nittygriddy daily for quite a while now and find it to be extremely helpful. I think/hope that it could also be a great tool for others. However, you should not consider this project stable, ie I might change things that require adjustments on the users side. But as I said earlier, if that were to happen and you don't want to use nittygriddy anymore, you can always use the generated ``run.C`` files independently. If you have issues with nittygriddy, would love to see datasets added, or have any other comments and suggestions it is best to open an issue here on github or create a pull request straight away.
+I am using nittygriddy daily for quite a while now and find it to be extremely helpful. I think/hope that it could also be a great tool for others. I will try hard to keep the current API stable, but if needed, I might have to make some breaking changes, which might need minor actions from the users. But as I said earlier, if that were to happen and you don't want to use nittygriddy anymore, you can always use the generated ``run.C`` files independently. If you have issues with nittygriddy, would love to see datasets added, or have any other comments and suggestions it is best to open an issue here on github or create a pull request straight away. See more on how to contribute at the bottom of this document.
 
 
 Installing nittygriddy
 ======================
 
-In the future nittygriddy might be available on ``pypi``, but for the moment you have to do the following steps: ::
+Nittygriddy is available on `pypi`. Thus installation is easily done with `pip`: ::
 
-  $ git clone https://github.com/cbourjau/nittygriddy.git
-  $ cd nittygriddy
-  $ pip install -e .
+  $ pip install --user nittygriddy
 
-This installs nittygriddy in ``editable`` mode, meaning that any changes to the files in the repository clone are immediately available to the command line tool without re-installation. This means that updates can be raked in with a simple ``git pull origin/master``.
-
-Eitherway, the command ``nitty`` is now avialable on the command line, along with its hopefully helpful ``--help``.
+The command ``nitty`` is now avialable on the command line, along with its hopefully helpful ``--help``.
 
 Using nittygriddy for the impatient
 ===================================
@@ -231,3 +227,13 @@ It then generates a ``run.C`` file from your options and copies it into that fol
 This ``run.C`` can be run on independently and should be easy to read.
 This has the advantage that you can always just stop using ``nittygriddy`` and drop back to modifying the macros yourself - no vendor lockin!
 However, if you would like to continue using ``nittygriddy``, you should not edit those macros directly since they might get overwritten and it defeats the purpose of this program in the first place.
+
+Contributing
+============
+Contributions of any kind (issues, pull requests, general comments...) are always welcome! If you would like to hack on nittygriddy (for example to add new datasets to the default ones) you should check out nitty griddy as an editable python package: ::
+
+  $ git clone https://github.com/cbourjau/nittygriddy.git
+  $ cd nittygriddy
+  $ pip install -e .
+
+This installs nittygriddy in ``editable`` mode, meaning that any changes to the files in the repository clone are immediately available to the command line tool without re-installation. This means that updates can be raked in with a simple ``git pull origin/master``.
