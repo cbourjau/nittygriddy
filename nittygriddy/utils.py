@@ -35,7 +35,6 @@ def validate_dataset(ds):
     for name, entry in ds.items():
         for field in req_fields:
             if field not in entry.keys():
-                # import ipdb; ipdb.set_trace()
                 raise ValueError("Field `{}` missing in `{}` dataset definition".format(field, name))
 
 
@@ -56,9 +55,12 @@ def get_datasets():
     try:
         with open(user_ds_name, "read") as f:
             user_ds = yaml.safe_load(f)
-            validate_dataset(user_ds)
+            if user_ds:
+                validate_dataset(user_ds)
+            else:
+                user_ds = {}
     except IOError:
-        raise ValueError("No user datasets found!")
+        # raise ValueError("No user datasets found!")
         # File did not exist
         user_ds = {}
     # check if there is an intersection between the user defined and the default dataset
