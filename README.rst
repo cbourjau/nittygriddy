@@ -91,7 +91,7 @@ The only ``.C`` file needed. It reflects setting up the options for your task an
 --------------------
 This file contains information about custom datasets. If the standard ones are used this is not necessary. The file should be located in your home directory at `~/nitty_datasets.yml`. The file has to be in `Yaml` formating. A typical entry looks like this:
 
-.. code-block::yaml
+.. code-block:: yaml
 
   LHC15o_pass1_HIR_FMD:
     data_pattern: pass1/AOD/*/AliAOD.root
@@ -109,7 +109,7 @@ This file contains information about custom datasets. If the standard ones are u
   LHC15f_AOD171_FMD:
   ...
     
-Note that `Yaml`, just like Python, is indention based. But don't worry, if the syntax is faulty, nittygriddy will complain. Datasets which are defined in `nitty_datasets.yml` will be merged with the default ones which come with nittygriddy.
+Note that `Yaml`, just like Python, is indention based. But don't worry, if the syntax is faulty, nittygriddy will complain. This includes missing fields in each entry. Datasets which are defined in `nitty_datasets.yml` will be merged with the default ones which come with nittygriddy.
 
 
 Using Nittygriddy
