@@ -22,11 +22,21 @@ I am using nittygriddy daily for quite a while now and find it to be extremely h
 Installing nittygriddy
 ======================
 
-Nittygriddy is available on `pypi`. Thus installation is easily done with `pip`: ::
+Nittygriddy is available on `pypi`. Thus installation is easily done with `pip`, but first you should make sure that the stuff you install with `pip` will later be avialble on the command line. Add this to your `.bashrc` or similar: ::
 
-  $ pip install --user nittygriddy
+  # .bashrc or similar
+  export PYTHONUSERBASE=$HOME/.local_pip
+  export PATH=$PYTHONUSERBASE/bin:$PATH
 
-The command ``nitty`` is now avialable on the command line, along with its hopefully helpful ``--help``.
+This will make everything installed as unprivileged user with `pip --user` go
+under `PYTHONUSERBASE`. Now you can run: ::
+
+
+  pip install --user nittygriddy
+
+
+Which installes nittygriddy into your home directory. The command ``nitty`` should now be avialable on the command line, along with its hopefully helpful ``--help``.
+
 
 Using nittygriddy for the impatient
 ===================================
