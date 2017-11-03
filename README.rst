@@ -46,8 +46,8 @@ Don't wanna read instructions? This is how you start an analysis on local data::
   $ nitty datasets --download LHC15o_pass1_HIR 1  # Download 1GB of the specified dataset
   $ nitty new my-analysis    # Create an example analysis folder (runs AliMultSelectionTask)
   $ cd my-analysis
-  $ # Run the analysis of this folder on the LHC15o dataset (parallel ("lite") with two processes)
-  $ nitty run lite LHC15o_pass1_HIR --nworkers=2
+  $ # Run the analysis of this folder on the LHC15o dataset locally
+  $ nitty run local LHC15o_pass1_HIR
   $ ls ./latest/  # marvel at the resulting AnalysisResults.root file
     
 
