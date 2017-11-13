@@ -69,7 +69,9 @@ def get_datasets():
         raise ValueError("The following user datasets are also in the default definitions. "
                          "Please rename your ones in `~/nitty_datasets.yml`:\n {}"
                          .format('/n'.join(intersect)))
-    return default_ds
+    full_ds=dict(default_ds)
+    full_ds.update(user_ds)
+    return full_ds
 
 
 def copy_template_files_to(dest):
