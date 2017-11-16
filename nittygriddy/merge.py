@@ -90,6 +90,10 @@ def create_subparsers(subparsers):
     parser_merge.add_argument('mergemode',
                               choices=('online', 'offline', 'download', 'clean', 'unmerge'),
                               help=("Merge files online, offline or download the latest merge results. "
-                                    "Use `clean` to delete previous merge stages. Use this with care! "
-                                    "`unmerge` deletes all merge stages. Don't use this in combination with `clean`."))
+                                    "Use `clean` to delete everything except the last merge stage. "
+                                    "Use this if you only wnat to keep the final result to safe space. "
+                                    "`unmerge` deletes all merge stages but kepes "
+                                    "the raw data. Use this if you want to re-merge your "
+                                    "data after more jobs finished. Don't use this in combination "
+                                    "with `clean` or you will be sorry."))
     parser_merge.set_defaults(op=merge)
