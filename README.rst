@@ -1,3 +1,7 @@
+.. image:: https://badge.fury.io/py/nittygriddy.svg
+    :target: https://badge.fury.io/py/nittygriddy
+
+	     
 ============
 Nittygriddy
 ============
