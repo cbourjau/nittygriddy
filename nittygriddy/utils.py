@@ -32,10 +32,14 @@ def validate_dataset(ds):
     req_fields = [
         'data_pattern', 'datadir', 'datatype', 'is_mc', 'notes',
         'run_list', 'run_number_prefix', 'system']
+    # ds are all datasets; entry is _one_ dataset!
     for name, entry in ds.items():
         for field in req_fields:
             if field not in entry.keys():
                 raise ValueError("Field `{}` missing in `{}` dataset definition".format(field, name))
+        # Make sure that the run list is a string; if its only one run it might be interpreted as int
+        if isinstance(entry['run_list'], int):
+            entry['run_list'] = str(entry['run_list'])
 
 
 def get_datasets():
@@ -136,7 +140,8 @@ def find_associated_archive_files(datadir, run_number_prefix, runs, data_pattern
     if "AliAOD.root" in data_pattern:
         # Sometimes, just sometimes, it seemed like a good idea to
         # call the archives differently...
-        archive_names.append("aod_archive.zip")
+        # we put the aod_archive.zip in the front of the list. This way its tried first
+        archive_names.insert(0, "aod_archive.zip")
 
     for archive_name in archive_names:
         for run in runs:
