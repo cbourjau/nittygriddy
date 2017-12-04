@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import os
 from pprint import pprint
 
@@ -17,7 +21,7 @@ def merge(args):
         raise ValueError("This command needs to be run from an output directory")
 
     if not utils.check_alien_token():
-        print "No valid alien token present. Run `alien-token-init` before nittygriddy"
+        print("No valid alien token present. Run `alien-token-init` before nittygriddy")
         quit()
 
     ROOT.gROOT.LoadMacro(r'GetSetting.C')
@@ -37,17 +41,17 @@ def merge(args):
         workdir = os.path.dirname(os.path.abspath("./run.C")).split("/")[-1]
         alien_workdir = os.path.join(utils.find_user_grid_dir(), workdir)
         files = utils.find_latest_merge_results(alien_workdir)
-        print "The following files will be downloaded:"
+        print("The following files will be downloaded:")
         pprint(files)
         for alien_path in files:
             local_path = alien_path.split(workdir)[-1].lstrip("/")
             try:
                 utils.download_file(alien_path, local_path)
             except ValueError:
-                print "{} exists and is not redownloaded.".format(local_path)
-            except OSError, e:
+                print("{} exists and is not redownloaded.".format(local_path))
+            except OSError as e:
                 # If there was an error in the download, just print, but keep going
-                print e.message
+                print(e.message)
 
     if args.mergemode == 'clean':
         workdir = os.path.dirname(os.path.abspath("./run.C")).split("/")[-1]
@@ -55,9 +59,9 @@ def merge(args):
         files = utils.find_sources_of_merged_files(utils.find_latest_merge_results(alien_workdir))
         folders = [os.path.split(f)[0] for f in files]
         if not folders:
-            print "No files to be cleaned up"
+            print("No files to be cleaned up")
             return
-        print "The following folders will be __DELETED__:"
+        print("The following folders will be __DELETED__:")
         pprint(folders)
         shall_delete = utils.yn_choice("Do you really want to delete these Folders? This may take a while")
         if shall_delete:
@@ -70,7 +74,7 @@ def merge(args):
         # see if the deletion was successful:
         left_files = utils.find_sources_of_merged_files(utils.find_latest_merge_results(alien_workdir))
         if left_files:
-            print "The following files could not be deleted:"
+            print("The following files could not be deleted:")
             pprint(left_files)
 
     if args.mergemode == 'unmerge':

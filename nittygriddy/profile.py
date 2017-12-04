@@ -1,8 +1,12 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import tempfile
 import os
 from os import path
 import subprocess
-import utils
+from . import utils
 
 
 def profile(args):
@@ -21,7 +25,7 @@ def profile(args):
             pass
     nitty_root = utils._internal_files_dir()
     poor_mans = path.join(nitty_root, "poormans.sh")
-    print "See the profiling result at {}".format(svg_file)
+    print("See the profiling result at {}".format(svg_file))
     p = subprocess.Popen(['bash', poor_mans, str(args.nsamples), pid, gdb_file, svg_file, nitty_root])
     try:
         p.wait()

@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import json
 
 from pygments import highlight
@@ -9,8 +13,8 @@ from nittygriddy import utils
 
 def _pprint_json(dics):
     json_str = json.dumps(dics, sort_keys=True, indent=4)
-    print highlight(unicode(json_str, 'UTF-8'),
-                    JsonLexer(), TerminalFormatter())
+    print(highlight(str(json_str, 'UTF-8'),
+                    JsonLexer(), TerminalFormatter()))
 
 
 def datasets(args):
@@ -44,7 +48,7 @@ def datasets(args):
 
 def search_datasets_for_string(s):
     def flatten(dictionary):
-        for key, value in dictionary.iteritems():
+        for key, value in dictionary.items():
             if isinstance(value, dict):
                 # recurse
                 for res in flatten(value):
@@ -53,7 +57,7 @@ def search_datasets_for_string(s):
                 yield key, value
     datasets = utils.get_datasets()
     matches = []
-    for dset_name, dset in datasets.iteritems():
+    for dset_name, dset in datasets.items():
         for key, value in flatten(dset):
             if s in value:
                 matches.append({dset_name: dset})

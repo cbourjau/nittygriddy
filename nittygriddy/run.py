@@ -1,6 +1,10 @@
 """
 Logic associated with the nitty run
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 from datetime import datetime
 from glob import glob
 import os
@@ -25,7 +29,7 @@ def _prepare_output_dir(args):
     try:
         os.mkdir(output_dir)
     except OSError:
-        print "Cannot create output folder {}".format(output_dir)
+        print("Cannot create output folder {}".format(output_dir))
         return
     try:
         os.symlink(output_dir, "latest")
@@ -90,10 +94,10 @@ def run(args):
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         procs.append(p)
         for line in iter(p.stdout.readline, b''):
-            print(line.rstrip())  # rstrip to remove \n; doesn't like carriage returns
-    except KeyboardInterrupt, e:
+            print((line.rstrip()))  # rstrip to remove \n; doesn't like carriage returns
+    except KeyboardInterrupt as e:
         for proc in procs:
-            print "Killing: ", proc
+            print("Killing: ", proc)
             proc.terminate()
         raise e
 

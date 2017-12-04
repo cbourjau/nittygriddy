@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 from glob import glob
 import yaml
 import logging
@@ -6,7 +10,11 @@ import re
 import shutil
 import subprocess
 import sys
-import urllib2
+try:
+    from urllib2 import urlopen
+except ImportError:
+    from urllib.request import urlopen
+
 import zipfile
 
 import ROOT
@@ -33,9 +41,9 @@ def validate_dataset(ds):
         'data_pattern', 'datadir', 'datatype', 'is_mc', 'notes',
         'run_list', 'run_number_prefix', 'system']
     # ds are all datasets; entry is _one_ dataset!
-    for name, entry in ds.items():
+    for name, entry in list(ds.items()):
         for field in req_fields:
-            if field not in entry.keys():
+            if field not in list(entry.keys()):
                 raise ValueError("Field `{}` missing in `{}` dataset definition".format(field, name))
         # Make sure that the run list is a string; if its only one run it might be interpreted as int
         if isinstance(entry['run_list'], int):
@@ -68,12 +76,12 @@ def get_datasets():
         # File did not exist
         user_ds = {}
     # check if there is an intersection between the user defined and the default dataset
-    intersect = set(default_ds.keys()).intersection(user_ds.keys())
+    intersect = set(default_ds.keys()).intersection(list(user_ds.keys()))
     if intersect:
         raise ValueError("The following user datasets are also in the default definitions. "
                          "Please rename your ones in `~/nitty_datasets.yml`:\n {}"
                          .format('/n'.join(intersect)))
-    full_ds=dict(default_ds)
+    full_ds = dict(default_ds)
     full_ds.update(user_ds)
     return full_ds
 
@@ -208,7 +216,7 @@ def download_from_grid_archive(alien_src, local_dest):
         try:
             zf.extractall(os.path.dirname(local_dest))
         except IOError:
-            print "Error unzipping {}. File was deleted".format(local_dest)
+            print("Error unzipping {}. File was deleted".format(local_dest))
     # Delete the zip archive file
     try:
         os.remove(local_dest)
@@ -258,10 +266,10 @@ def download_dataset(dataset, volume, runs=None):
         except OSError:
             if not warned_about_skipped:
                 warned_about_skipped = True
-                print "Some files were present and were not redownloaded"
+                print("Some files were present and were not redownloaded")
         except RuntimeError as e:
             # Error in download; probably with MD5 sum
-            print e.message
+            print(e.message)
             pass
 
         sys.stdout.write("\rDownloaded {:2f}% of {}GB so far"
@@ -280,7 +288,7 @@ def get_latest_aliphysics():
     string :
         tag as its usable in run.C; eg., 'vAN-20160606-1'
     """
-    html = urllib2.urlopen('http://alimonitor.cern.ch/packages/').read()
+    html = urlopen('http://alimonitor.cern.ch/packages/').read()
     tag_pattern = r'vAN-\d{8}-\d+'
     return sorted(re.findall(tag_pattern, html)).pop()
 
@@ -450,7 +458,7 @@ def yn_choice(message, default='y'):
         `True` for yes, else `False`
     """
     choices = 'Y/n' if default.lower() in ('y', 'yes') else 'y/N'
-    choice = raw_input("%s (%s) " % (message, choices))
+    choice = input("%s (%s) " % (message, choices))
     values = ('y', 'yes', '') if default == 'y' else ('y', 'yes')
     return choice.strip().lower() in values
 

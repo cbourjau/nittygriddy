@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import os
 import shutil
 
@@ -27,7 +31,7 @@ class Test_downloader(TestCase):
     def test_invalid_dataset(self):
         self.assertRaises(KeyError, utils.download_dataset, "invalid_dataset", 5)
 
-    @skip("Skip download test")
+    # @skip("Skip download test")
     def test_download_one_file(self):
         try:
             shutil.rmtree("/tmp/nitty_test")
@@ -44,12 +48,12 @@ class Test_downloader(TestCase):
         self.assertTrue(os.path.isfile("/tmp/nitty_test/AnalysisResults.root"))
         shutil.rmtree("/tmp/nitty_test")
 
-    @skip("Skip download test")
+    # @skip("Skip download test")
     def test_downloaded_something(self):
         utils.check_alien_token()
         utils.download_dataset("LHC10h_AOD160", 0.001)
 
-    @skip("Skip download test")
+    # @skip("Skip download test")
     def test_download_files_from_archive(self):
         try:
             shutil.rmtree("/tmp/nitty_test")
@@ -95,10 +99,10 @@ class Test_grid_features(TestCase):
 
     def test_find_associated_archive_files(self):
         urls = utils.find_associated_archive_files(
-            datadir=u"/alice/sim/2012/LHC12a11a",
-            run_number_prefix=u"",
+            datadir="/alice/sim/2012/LHC12a11a",
+            run_number_prefix="",
             runs=[137686, 138534, 138653, 139038, 139437],
-            data_pattern=u"AOD157/*/AliAOD.root")
+            data_pattern="AOD157/*/AliAOD.root")
         self.assertGreater(len(urls), 0)
 
 
@@ -109,7 +113,7 @@ class Test_environment(TestCase):
     def test_alien_token_valid(self):
         self.assertTrue(utils.check_alien_token())
 
-    @skip("Skip token invalid test")
+    # @skip("Skip token invalid test")
     def test_alien_token_invalid(self):
         cmd = ['alien-token-destroy']
         subprocess.check_output(cmd)

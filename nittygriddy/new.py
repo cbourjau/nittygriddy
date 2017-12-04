@@ -1,6 +1,10 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import os
 import shutil
-import utils
+from . import utils
 
 
 def new(args):
@@ -8,12 +12,12 @@ def new(args):
     try:
         os.mkdir(new_dir)
     except OSError:
-        print "Cannot create output folder {}".format(new_dir)
+        print("Cannot create output folder {}".format(new_dir))
         return
     # Copy default `configureTrain.C` to new folder
     template_dir = utils._internal_files_dir()
     shutil.copy(os.path.join(template_dir, "ConfigureTrain.C"), new_dir)
-    print "Created new project directory {}".format(args.name)
+    print("Created new project directory {}".format(args.name))
 
 
 def create_subparsers(subparsers):
