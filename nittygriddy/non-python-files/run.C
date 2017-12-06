@@ -106,7 +106,13 @@ AliAnalysisGrid* CreateAlienHandler(const std::string gridMode) {
 
   // Declare input data to be processed
   plugin->SetGridDataDir(GetSetting("datadir").c_str());
-  plugin->SetDataPattern(GetSetting("data_pattern").c_str());
+  // The alien plugin treats the first folder in data_pattern as if it
+  // were preceded by a wildcard (unless preceeded by /, which makes
+  // no sense, since that would be an absolute path...)!
+  // i.e. my/path/AliAOD.root is treated as *my/path/AliAOD.root
+  // I don't want that crab in the dataset files and it would break the local search
+  // So we preceed the patter by an `/` here
+  plugin->SetDataPattern(TString::Format("/%s", GetSetting("data_pattern").c_str()));
   plugin->SetGridWorkingDir(GetSetting("workdir").c_str());
   plugin->SetAnalysisMacro(TString::Format("Macro_%s.C", GetSetting("workdir").c_str()));
   plugin->SetExecutable(TString::Format("Exec_%s.sh", GetSetting("workdir").c_str()));
