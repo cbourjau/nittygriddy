@@ -169,9 +169,9 @@ LHC12a11f:
   system: PbPb
 
 LHC14b8a:
-  data_pattern: '*/AliAOD.root'
+  data_pattern: '*/galice.root'
   datadir: /alice/sim/2014/LHC14b8a
-  datatype: aod
+  datatype: esd
   is_mc: 'true'
   notes: 2.76GeV, Full MC flow production:0-5%, LHC10h anchors, including forward
     detectors, ALIROOT-5338, AliGenTunedOnPbPb
