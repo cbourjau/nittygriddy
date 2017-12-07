@@ -1,7 +1,7 @@
 from setuptools import setup
 from glob import glob
 
-install_requires = ['rootpy', 'pygments', 'pyyaml']
+install_requires = ['rootpy', 'pygments', 'pyyaml', 'future']
 tests_require = ['nose']
 
 setup(
