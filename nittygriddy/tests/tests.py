@@ -31,7 +31,7 @@ class Test_downloader(TestCase):
     def test_invalid_dataset(self):
         self.assertRaises(KeyError, utils.download_dataset, "invalid_dataset", 5)
 
-    # @skip("Skip download test")
+    @skip("Skip download test")
     def test_download_one_file(self):
         try:
             shutil.rmtree("/tmp/nitty_test")
@@ -53,7 +53,7 @@ class Test_downloader(TestCase):
         utils.check_alien_token()
         utils.download_dataset("LHC10h_AOD160", 0.001)
 
-    # @skip("Skip download test")
+    @skip("Skip download test")
     def test_download_files_from_archive(self):
         try:
             shutil.rmtree("/tmp/nitty_test")
@@ -113,7 +113,7 @@ class Test_environment(TestCase):
     def test_alien_token_valid(self):
         self.assertTrue(utils.check_alien_token())
 
-    # @skip("Skip token invalid test")
+    @skip("Skip token invalid test")
     def test_alien_token_invalid(self):
         cmd = ['alien-token-destroy']
         subprocess.check_output(cmd)
