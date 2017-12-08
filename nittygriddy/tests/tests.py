@@ -146,3 +146,10 @@ class Test_invalid_user_dataset_def(TestCase):
         # Inner entry does not have the keys but is a dict
         ds = {'blub': dict()}
         self.assertRaises(ValueError, utils.validate_dataset, ds)
+
+
+class Test_cli(TestCase):
+    def test_datasets(self):
+        p = parser.create_parser()
+        args = p.parse_args(['datasets', '-l'])
+        args.op(args)
