@@ -6,7 +6,7 @@ tests_require = ['nose']
 
 setup(
     name='nittygriddy',
-    version='1.0.4',
+    version='1.0.5',
     description="Convinient way to deploy your ALICE analysis locally (sequential and proof lite) or on the grid",
     author='Christian Bourjau',
     author_email='christian.bourjau@cern.ch',
