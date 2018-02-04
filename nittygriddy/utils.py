@@ -170,7 +170,7 @@ def find_associated_archive_files(datadir, run_number_prefix, runs, data_pattern
             # line, we avoid some of this crap by fishing out the urls
             # manually from the TGridResult...
             gr = finds.GetGridResult()
-            urls = [str(el.GetValue('turl')).replace("alien://", "") for el in gr]
+            urls.extend([str(el.GetValue('turl')).replace("alien://", "") for el in gr])
         # Did we find any files? If not, lets try it with the next archive name
         if len(urls) != 0:
             break
