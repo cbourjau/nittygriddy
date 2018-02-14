@@ -293,6 +293,23 @@ def get_latest_aliphysics():
     tag_pattern = r'vAN-\d{8}-\d+'
     return sorted(re.findall(tag_pattern, html)).pop()
 
+def check_aliphysics_version(version):
+    """
+    Check wether a version od aliphysics has been deployed.
+    If it is, the version name is returned. Otherwhise an error is raised
+
+    Returns
+    -------
+    string: version
+
+    Raises
+    ------
+    if the version is not deployed
+    """
+    html = urlopen('http://alimonitor.cern.ch/packages/').read()
+    if html.find(version) < 0:
+        raise ValueError("AliPhysics version {} is not deployed!".format(version))
+    return version
 
 def find_latest_merge_results(alien_workdir):
     """
@@ -484,7 +501,9 @@ def prepare_get_setting_c_file(output_dir, args):
                    runmode=args.runmode,
                    nworkers=args.nworkers,
                    wait_for_gdb="true" if args.wait_for_gdb else "false",
-                   aliphysics_version=get_latest_aliphysics() if args.runmode == "grid" else "",
+                   aliphysics_version= get_latest_aliphysics() if args.runmode == "grid" and args.aliphysics_version==""
+                     else check_aliphysics_version(args.aliphysics_version) if args.runmode == "grid" and args.aliphysics_version!=""
+                     else "",
                    par_files=args.par_files if args.par_files else "",
                    ttl=args.ttl,
                    max_files_subjob=args.max_files_subjob,

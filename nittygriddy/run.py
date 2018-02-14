@@ -124,5 +124,7 @@ def create_subparsers(subparsers):
     parser_run.add_argument('--runs_per_master', type=str, default="1",
                             help="Number of runs to be processed by each master job. Set it to 0 to process\
                             the entire runlist with one masterjob.")
+    parser_run.add_argument('--aliphysics_version', type=str, default="",
+                            help="Aliphysics version to use. Available in grid mode only")
     parser_run.add_argument('--max_n_events', type=str, help="Maximal number of events to be processed locally", default="-1")
     parser_run.set_defaults(op=run)
