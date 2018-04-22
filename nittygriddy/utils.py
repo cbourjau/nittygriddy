@@ -481,6 +481,28 @@ def yn_choice(message, default='y'):
     return choice.strip().lower() in values
 
 
+def _parse_time_to_live_arg(ttl):
+    """
+    Parse the user specified TTL; eg. 1h, 1.5h or 30000.
+
+    If no unit is given, default to seconds. Only `h` is supported as a unit
+    """
+    try:
+        # no unit given
+        raise DeprecationWarning("TTL should be specified with units, e.g. 1h, or 1.5h, or 30000s. "
+                                 "The given TTL is interpreted as {}s. "
+                                 "Future version of nittygriddy will require a time unit for TTL".format(ttl))
+        ttl = int(ttl)
+    except ValueError:
+        if ttl[-1] == "h":
+            ttl = int(60 * 60 * float(ttl[:-1]))
+        elif ttl[-1] == "s":
+            ttl = int(ttl[:-1])
+        else:
+            raise ValueError("Invalid TTL specified: {}".format(ttl))
+    return ttl
+
+
 def prepare_get_setting_c_file(output_dir, args):
     ds = get_datasets()[args.dataset]
     with open(os.path.join(output_dir, "GetSetting.C"), "w") as get_setting_c:
@@ -505,7 +527,7 @@ def prepare_get_setting_c_file(output_dir, args):
                      else check_aliphysics_version(args.aliphysics_version) if args.runmode == "grid" and args.aliphysics_version!=""
                      else "",
                    par_files=args.par_files if args.par_files else "",
-                   ttl=args.ttl,
+                   ttl=_parse_time_to_live_arg(args.ttl),
                    max_files_subjob=args.max_files_subjob,
                    use_train_conf="true" if project_uses_train_cfg() else "false",
                    runs_per_master=args.runs_per_master,

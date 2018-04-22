@@ -117,7 +117,7 @@ def create_subparsers(subparsers):
                             help="Patch aliphysics on the grid with these space separeated par or libXXX.so files. Build par_files before with `cd $ALICE_WORK_DIR/BUILD/AliPhysics-latest/AliPhysics/; make MODULE.par; make -j$MJ install`")
     parser_run.add_argument('--run_list', type=str,
                             help="Overwrite default (comma seperated) run list for the given dataset")
-    parser_run.add_argument('--ttl', type=str, help="Number of seconds this job should live", default="30000")
+    parser_run.add_argument('--ttl', type=str, help="Time this job should live; eg. 1h or 1.5h or 30000s. If no unit is given, default to `s` (deprecated)", default="30000")
     parser_run.add_argument('--max_files_subjob', type=str, help="Maximum number of files per subjob", default="50")
     parser_run.add_argument('--wait_for_gdb', action='store_true', default=False,
                             help="Pause the execution to allow for connecting gdb to the process")

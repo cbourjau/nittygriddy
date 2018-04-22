@@ -153,3 +153,12 @@ class Test_cli(TestCase):
         p = parser.create_parser()
         args = p.parse_args(['datasets', '-l'])
         args.op(args)
+
+
+class Test_ttl(TestCase):
+    def test_ttl(self):
+        self.assertEqual(utils._parse_time_to_life_arg("1h"), 60 * 60)
+        self.assertEqual(utils._parse_time_to_life_arg("1.5h"), 1.5 * 60 * 60)
+        # Backwards compatible: no unit defaults to seconds
+        self.assertEqual(utils._parse_time_to_life_arg("20"), 20)
+        self.assertEqual(utils._parse_time_to_life_arg("20s"), 20)
