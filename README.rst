@@ -251,3 +251,13 @@ Contributions of any kind (issues, pull requests, general comments...) are alway
   $ pip install -e .
 
 This installs nittygriddy in ``editable`` mode, meaning that any changes to the files in the repository clone are immediately available to the command line tool without re-installation. This means that updates can be raked in with a simple ``git pull origin/master``.
+
+Contributors
+============
+
+I am very happy that others also seem to find nittygriddy useful! Some of these great people even send in some Pull Requests to fix some bugs or to add new features. Big thanks to:
+
+  - `Maximiliano Puccio <https://github.com/mpuccio>`_
+  - `Yasser Corrales Morales <https://github.com/ycorrales>`_
+  - `Luca Barioglio <https://github.com/lbariogl>`_
+
