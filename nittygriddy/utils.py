@@ -488,11 +488,8 @@ def _parse_time_to_live_arg(ttl):
     If no unit is given, default to seconds. Only `h` is supported as a unit
     """
     try:
-        # no unit given
-        raise DeprecationWarning("TTL should be specified with units, e.g. 1h, or 1.5h, or 30000s. "
-                                 "The given TTL is interpreted as {}s. "
-                                 "Future version of nittygriddy will require a time unit for TTL".format(ttl))
         ttl = int(ttl)
+    # There was a unit so that failed
     except ValueError:
         if ttl[-1] == "h":
             ttl = int(60 * 60 * float(ttl[:-1]))
@@ -500,6 +497,11 @@ def _parse_time_to_live_arg(ttl):
             ttl = int(ttl[:-1])
         else:
             raise ValueError("Invalid TTL specified: {}".format(ttl))
+    # no unit given
+    else:
+        print("Warning: TTL should be specified with units, e.g. 1h, or 1.5h, or 30000s. "
+              "The given TTL is interpreted as {}s. "
+              "Future version of nittygriddy will require a time unit for TTL".format(ttl))
     return ttl
 
 

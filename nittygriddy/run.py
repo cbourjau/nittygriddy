@@ -28,9 +28,9 @@ def _prepare_output_dir(args):
         output_dir += args.suffix
     try:
         os.mkdir(output_dir)
-    except OSError:
-        print("Cannot create output folder {}".format(output_dir))
-        return
+    except OSError as e:
+        raise ValueError("Cannot create output folder {} (already exist). ".format(output_dir) +
+                         "Maybe wait a few seconds and try again?")
     try:
         os.symlink(output_dir, "latest")
     except OSError as e:
@@ -52,14 +52,12 @@ def _prepare_output_dir(args):
 
     # create GetSetting.C in output dir (from template)
     utils.prepare_get_setting_c_file(output_dir, args)
-
     return output_dir
 
 
 def run(args):
     utils.is_valid_project_dir()
     output_dir = _prepare_output_dir(args)
-
     # start the analysis
     os.chdir(output_dir)
     if args.runmode != "grid":
@@ -117,7 +115,7 @@ def create_subparsers(subparsers):
                             help="Patch aliphysics on the grid with these space separeated par or libXXX.so files. Build par_files before with `cd $ALICE_WORK_DIR/BUILD/AliPhysics-latest/AliPhysics/; make MODULE.par; make -j$MJ install`")
     parser_run.add_argument('--run_list', type=str,
                             help="Overwrite default (comma seperated) run list for the given dataset")
-    parser_run.add_argument('--ttl', type=str, help="Time this job should live; eg. 1h or 1.5h or 30000s. If no unit is given, default to `s` (deprecated)", default="30000")
+    parser_run.add_argument('--ttl', type=str, help="Time this job should live; eg. 1h or 1.5h or 30000s. If no unit is given, default to `s` (deprecated)", default="8h")
     parser_run.add_argument('--max_files_subjob', type=str, help="Maximum number of files per subjob", default="50")
     parser_run.add_argument('--wait_for_gdb', action='store_true', default=False,
                             help="Pause the execution to allow for connecting gdb to the process")
