@@ -40,6 +40,8 @@ std::string GetSetting(const std::string settingName) {{
       return "{runs_per_master}";
     else if (settingName == "max_n_events")
       return "{max_n_events}";
+    else if (settingName == "read_trackref")
+      return "{read_trackref}";
     else
       std::cout << "Invalid setting name: " << settingName << std::endl;
     return "";

@@ -200,7 +200,8 @@ void run(const std::string gridMode="")
   }
   if (GetSetting("is_mc") == "true" && GetSetting("datatype") == "esd") {
     AliMCEventHandler* handler = new AliMCEventHandler;
-    handler->SetReadTR(kFALSE);
+    if (GetSetting("read_trackref") == "true") handler->SetReadTR(kTRUE);
+    else handler->SetReadTR(kFALSE);
     mgr->SetMCtruthEventHandler(handler);
   }
 
