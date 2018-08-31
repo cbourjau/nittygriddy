@@ -260,4 +260,5 @@ I am very happy that others also seem to find nittygriddy useful! Some of these 
   - `Maximiliano Puccio <https://github.com/mpuccio>`_
   - `Yasser Corrales Morales <https://github.com/ycorrales>`_
   - `Luca Barioglio <https://github.com/lbariogl>`_
+  - `Freja Thoresen <https://github.com/FrejaThoresen>`_
 
