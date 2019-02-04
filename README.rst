@@ -1,3 +1,5 @@
+**The development of `nittygriddy` is now taking place at https://github.com/alice-contrib/nittygriddy . Please file issues and PRs over there**
+
 .. image:: https://badge.fury.io/py/nittygriddy.svg
     :target: https://badge.fury.io/py/nittygriddy
 
